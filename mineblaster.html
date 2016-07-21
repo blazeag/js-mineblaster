@@ -1,0 +1,68 @@
+<!DOCTYPE HTML>
+
+<html>
+
+	<head>
+	
+		<title>MineBlaster</title>
+
+		<link type="text/css" rel="stylesheet" href="css/mineblaster.css" />
+
+		<script type="text/javascript" src="https://code.jquery.com/jquery-1.2.1.min.js"></script>
+		<script type="text/javascript" src="js/field.js"></script>
+		<script type="text/javascript" src="js/listeners.js"></script>
+		<script type="text/javascript" src="js/mineblaster.js"></script>
+
+	</head>
+
+
+
+	<body>
+
+		<h1>MineBlaster</h1>
+
+
+
+		<hr />
+
+
+
+		<!-- Controls container -->
+		<div id="controls">
+			
+			
+
+			<!-- Field parameters container -->
+			<div id="parameters">
+				<span class="parameter">Rows <input type="number" id="rows_number" value="10" min="0" max="30" /></span>
+				<span class="parameter">Columns <input type="number" id="cols_number" value="10" min="0" max="30" /></span>
+				<span class="parameter">Mines <input type="number" id="mine_number" value="10" min="0" /></span>
+				<input id="regenerate" type="button" value="Generate field" />
+			</div>
+
+
+
+			<hr />
+
+
+
+			<!-- Visual game indicators container -->
+			<div id="indicators">
+				<span class="indicator">Remaining cells: <span id="remaining_cells"></span></span>
+				<span class="indicator">Remaining mines: <span id="remaining_mines"></span></span>
+			</div>
+
+		</div>
+		
+
+
+		<hr />
+			
+		
+
+		<!-- Field container -->
+		<div id="field"></div>
+
+	</body>
+
+</html>
