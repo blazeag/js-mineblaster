@@ -1,0 +1,73 @@
+body {
+	font-family: arial, helvetica, sans-serif;
+	background: #ddd;
+	text-align: center;
+}
+
+h1 {
+	margin: 0;
+	color: #35f;
+}
+
+table {
+	margin: auto;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+}
+
+td {
+	cursor: default;
+	border: 1px #aaa solid;
+	background: #ccc;
+	width: 50px;
+	height: 50px;
+	text-align: center;
+	vertical-align: middle;
+	font-weight: bold;
+}
+
+#parameters .parameter {
+	display: inline-block;
+}
+
+#indicators span.indicator {
+	display: inline-block;
+	border: 1px #aaa solid;
+	padding: 5px 15px;
+	background: #dfefff;
+	border-radius: 5px;
+}
+
+input[type='number'] {
+	width: 40px;
+	text-align: center;
+}
+
+.open_cell {
+	background: #fff;
+}
+
+.mine_1 { color: #090 }
+.mine_2 { color: #060 }
+.mine_3 { color: #009 }
+.mine_4 { color: #006 }
+.mine_5 { color: #660 }
+.mine_6 { color: #330 }
+.mine_7 { color: #900 }
+.mine_8 { color: #600 }
+.mine { background-color: #900; color: #ff0; font-size: 30pt }
+.demined { background-color: #696; color: #ff0; font-size: 30pt }
+.wrong_mine { color: #f00; text-decoration: line-through; font-size: 30pt }
+
+
+
+/* Small screens */
+
+@media screen and (max-width: 480px) {
+	
+	#parameters .parameter {
+		display: block;
+		padding-bottom: 5px;
+	}
+	
+}
