@@ -19,8 +19,8 @@
  *****************************************************************************/
 
 var field;			// Array containing mines and cells values
-var open_cells;		// Array containing open cells boolean flags
-var marked_cells;	// Array containing cell markers
+var open_cells;			// Array containing open cells boolean flags
+var marked_cells;		// Array containing cell markers
 
 var open_cells_number;		// Open cells counter
 var market_mines_number;	// Mine-marked cells number
@@ -80,10 +80,10 @@ function initialize()
 	$("td").unbind();
 
 	// Associate new events to cells
-	$("td").click(cell_click);						// Cell opening listener
+	$("td").click(cell_click);				// Cell opening listener
 	$("td").dblclick(open_surrounding_cells);		// Surrounding cells opening listener
 	$("td").mousedown(right_mouse_button);			// Cell marking listener
-	$("table").bind("contextmenu", function (e) {	// Avoid cells contextual menu on right mouse button click
+	$("table").bind("contextmenu", function (e) {		// Avoid cells contextual menu on right mouse button click
 		e.preventDefault();
 	});
 }
