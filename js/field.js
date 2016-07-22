@@ -28,7 +28,7 @@ function generate_field()
 // ---------------------------------------------------------------------
 function draw_field()
 {
-	var i, j;					// Counters
+	var i, j;			// Counters
 	var field = $('#field');	// Field HTML element
 	var field_string = '';		// Empty HTML field string
 
@@ -87,9 +87,9 @@ function calculate_cells_values()
 					// From one column to the left to one column to the right
 					for (w = -1; w < 2; w++)
 					{
-						if (i + k < 0) continue;				// Skip if above row is out of the field
+						if (i + k < 0) continue;			// Skip if above row is out of the field
 						if (i + k >= rows_number) continue;		// Skip if below row is out of the field
-						if (j + w < 0) continue;				// Skip if left column is out of the field
+						if (j + w < 0) continue;			// Skip if left column is out of the field
 						if (j + w >= cols_number) continue;		// Skip if right column is out of the field
 						if (k == 0 && w == 0) continue;			// Don't compare a cell with itself
 
