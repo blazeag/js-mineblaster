@@ -60,7 +60,7 @@ function open_cell(row, column)
 	{
 		cell.addClass("mine");		// Apply mined CSS class
 		alert("You're dead :(")		// Warn of death 
-		game_over();				// Call end of game function
+		game_over();			// Call end of game function
 		
 		return;
 	};
@@ -69,7 +69,7 @@ function open_cell(row, column)
 	if (open_cells_number == (rows_number * cols_number) - mine_number)
 	{
 		alert("You win! :)");		// Warn of victory
-		game_over();				// Call end of game function
+		game_over();			// Call end of game function
 		return;
 	}
 
