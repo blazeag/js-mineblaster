@@ -2,7 +2,7 @@ body {
 	margin: 0;
 	padding: 0;
 	font-family: arial, helvetica, sans-serif;
-	background: #fff; /* Background theme color */
+	background: #fff; /* Background initial color */
 	text-align: center;
 }
 
@@ -91,7 +91,8 @@ input[type="button"] {
 
 /* Small screens */
 
-@media screen and (max-width: 480px) {
+@media screen and (max-width: 480px)
+{
 	
 	#parameters .parameter {
 		display: block;
@@ -101,6 +102,5 @@ input[type="button"] {
 	input[type="button"] {
 		margin-left: 0px;
 	}
-	
 	
 }
