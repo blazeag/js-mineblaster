@@ -83,6 +83,7 @@ input[type="button"] {
 .mine_6 { color: #330 }
 .mine_7 { color: #900 }
 .mine_8 { color: #600 }
+
 .mine { background-color: #900; color: #ff0; font-size: 30pt }
 .demined { background-color: #696; color: #ff0; font-size: 30pt }
 .wrong_mine { color: #f00; text-decoration: line-through; font-size: 30pt }
