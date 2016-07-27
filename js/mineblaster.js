@@ -23,7 +23,7 @@ var open_cells;			// Array containing open cells boolean flags
 var marked_cells;		// Array containing cell markers
 
 var open_cells_number;		// Open cells counter
-var market_mines_number;	// Mine-marked cells number
+var marked_mines_number;	// Mine-marked cells number
 
 var rows_number;		// Field rows number
 var cols_number;		// Field columns number

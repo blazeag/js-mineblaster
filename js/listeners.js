@@ -101,7 +101,7 @@ function open_cell(row, column)
 // ---------------------------------------------------------------------
 function open_surrounding_cells()
 {
-	var i, j, market_mines_number;
+	var i, j, marked_mines_number;
 	var id;
 	var row, column;
 
@@ -118,7 +118,7 @@ function open_surrounding_cells()
 	}
 
 	// Count mine-marked cells surrounding pressed one
-	market_mines_number = 0;
+	marked_mines_number = 0;
 
 	// Row by row
 	for (i = -1; i < 2; i++)
@@ -133,13 +133,13 @@ function open_surrounding_cells()
 			if (i == 0 && j == 0) continue;
 			if (open_cells[row + i][column + j] == 1) continue;
 
-			if (marked_cells[row + i][column + j] == "M") market_mines_number++;
+			if (marked_cells[row + i][column + j] == "M") marked_mines_number++;
 		}
 	}
 
 	// If marked mines is greater or equal to cell value,
 	// open all non-market surrounding ones
-	if (market_mines_number >= field[row][column])
+	if (marked_mines_number >= field[row][column])
 	{
 		// Row by row
 		for (i = -1; i < 2; i++)
@@ -204,12 +204,13 @@ function game_over()
 function update_indicators()
 {
 	var i, j;
+	var remaining_cells = (rows_number * cols_number) - mine_number - open_cells_number;
 
 	// Update remaining non-opened cells indicator
-	$("#remaining_cells").html((rows_number * cols_number) - mine_number - open_cells_number);
+	$("#remaining_cells").html(remaining_cells.toString());
 
 	// Update remaining mines indicator
-	market_mines_number = 0;
+	marked_mines_number = 0;
 
 	for (i = 0; i < rows_number; i++)
 	{
@@ -217,12 +218,14 @@ function update_indicators()
 		{
 			if (marked_cells[i][j] == "M")
 			{
-				market_mines_number++;
+				marked_mines_number++;
 			}
 		}
 	}
+	
+	var remaining_mines = mine_number - marked_mines_number;
 
-	$("#remaining_mines").html(mine_number - market_mines_number);
+	$("#remaining_mines").html(remaining_mines.toString());
 }
 
 
