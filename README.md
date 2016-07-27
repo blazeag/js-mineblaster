@@ -2,7 +2,7 @@
 
 ### Yet another Minesweeper clone
 
-A simple javascript / jQuery based Minesweeper clone.
+A simple javascript / jQuery based Minesweeper clone. [Demo here](http://mineblaster.blazestudio.it/)
 
 ### Mouse actions
 
