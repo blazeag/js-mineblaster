@@ -3,10 +3,19 @@
 function generate_field()
 {
 	var i, j;
+	var random;
 	
-	var random = Math.floor(Math.random() * background_colors.length);
+	do
+	{
+		random = Math.floor(Math.random() * background_colors.length);
+	}
+	while (random == current_background);
+	
+	current_background = random;
+	
+	
 
-	$('body').css('background-color', background_colors[random]);
+	$('body').animate({'background-color': background_colors[random]});
 	
 	// Row by row
 	for (i = 0; i < rows_number; i++)
