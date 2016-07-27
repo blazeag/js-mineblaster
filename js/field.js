@@ -15,7 +15,7 @@ function generate_field()
 	
 	
 
-	$('body').animate({'background-color': background_colors[random]});
+	$('body').stop().animate({'background-color': background_colors[random]});
 	
 	// Row by row
 	for (i = 0; i < rows_number; i++)
