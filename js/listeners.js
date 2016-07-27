@@ -1,4 +1,4 @@
-// Cell click listener function
+// Cell click listener callback
 // ---------------------------------------------------------------------
 function cell_click(e)
 {
