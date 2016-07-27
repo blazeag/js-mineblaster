@@ -46,26 +46,35 @@ function initialize()
 	// Empty counters
 	open_cells_number = 0;
 
+	// Get highest row and column value
+	max_rows_number = $('#rows_number').attr("max");
+	max_cols_number = $('#cols_number').attr("max");
+
 	// Get and check all field parameters
 	rows_number = parseInt($("#rows_number").val());
 	cols_number = parseInt($("#cols_number").val());
 	mine_number = parseInt($("#mine_number").val());
 
-	if (rows_number < 1 || rows_number > 30)
+	if (rows_number < 1 || rows_number > max_rows_number)
 	{
-		alert("Invalid rows number!");
+		alert("Max rows number is " + max_rows_number + "!");
+		$('#rows_number').val(max_rows_number);
 		return false;
 	}
-	if (cols_number < 1 || cols_number > 30)
+	
+	if (cols_number < 1 || cols_number > max_cols_number)
 	{
-		alert("Invalid columns number!");
+		alert("Max columns number is " + max_cols_number + "!");
+		$('#cols_number').val(max_cols_number);
 		return false;
 	}
+
 	if (mine_number <= 0)
 	{
 		alert("Put at least one mine in the field!");
 		return false;
 	}
+
 	if (mine_number > (rows_number * cols_number) - 1)
 	{
 		alert("Mines saturate field!");
