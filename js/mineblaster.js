@@ -29,6 +29,8 @@ var rows_number;		// Field rows number
 var cols_number;		// Field columns number
 var mine_number;		// Field mines number
 
+var background_colors = ['#930', '#390', '#039', '#9a0', '#399', '#939', '#e50'];	// Background possible colors
+
 
 
 // Game initialization

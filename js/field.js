@@ -4,7 +4,10 @@ function generate_field()
 {
 	var i, j;
 	
+	var random = Math.floor(Math.random() * background_colors.length);
 
+	$('body').css('background-color', background_colors[random]);
+	
 	// Row by row
 	for (i = 0; i < rows_number; i++)
 	{
