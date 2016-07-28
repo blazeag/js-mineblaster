@@ -93,6 +93,12 @@ function resize_field()
 	var cell_h = window_h / rows_number;
 	cell_h = cell_w = Math.min(cell_w, cell_h);
 	
+	// Minimum width
+	if (cell_w < 40)
+	{
+		cell_w = cell_h = 40;
+	}
+	
 	$("div.cell").width(cell_w);
 	$("div.cell").height(cell_h);
 	
