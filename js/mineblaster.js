@@ -24,10 +24,12 @@ var marked_cells;		// Array containing cell markers
 
 var open_cells_number;		// Open cells counter
 var marked_mines_number;	// Mine-marked cells number
+var just_opened_cells;	// List of just opened cells
 
 var rows_number;		// Field rows number
 var cols_number;		// Field columns number
 var mine_number;		// Field mines number
+var timeouts = [];		// Timeout container			
 
 var background_colors = ['#930', '#390', '#039', '#9a0', '#399', '#939', '#e50', '#999'];	// Background possible colors
 var current_background = '';
@@ -42,6 +44,13 @@ function initialize()
 	field = new Array();
 	open_cells = new Array();
 	marked_cells = new Array();
+
+	for (i = 0; i < timeouts.length; i++)
+	{
+		clearTimeout(timeouts[i]);
+	}
+	
+	timeouts = [];
 
 	// Empty counters
 	open_cells_number = 0;
@@ -89,13 +98,13 @@ function initialize()
 	update_indicators();
 
 	// Unbind all previously associated cells listeners
-	$("td").unbind();
+	$(".cell").unbind();
 
 	// Associate new events to cells
-	$("td").click(cell_click);				// Cell opening listener
-	$("td").dblclick(open_surrounding_cells);		// Surrounding cells opening listener
-	$("td").mousedown(right_mouse_button);			// Cell marking listener
-	$("table").bind("contextmenu", function (e) {		// Avoid cells contextual menu on right mouse button click
+	$(".cell").click(cell_click);				// Cell opening listener
+	$(".cell").dblclick(open_surrounding_cells);		// Surrounding cells opening listener
+	$(".cell").mousedown(right_mouse_button);			// Cell marking listener
+	$("#field").bind("contextmenu", function (e) {		// Avoid cells contextual menu on right mouse button click
 		e.preventDefault();
 	});
 }

@@ -12,14 +12,14 @@ function cell_click(e)
 	column = parseInt(id.substring(id.indexOf('col') + 3));
 
 	// Manage cell opening
-	open_cell(row, column);
+	open_cell(row, column, 0);
 }
 
 
 
 // Cell opening procedure
 // ---------------------------------------------------------------------
-function open_cell(row, column)
+function open_cell(row, column, stack_level)
 {
 	var i, j;
 	var cell;
@@ -38,16 +38,14 @@ function open_cell(row, column)
 
 	// Flag cell as opened
 	open_cells[row][column] = 1;
-	
+	just_opened_cells[just_opened_cells.length] = [row, column];
+
 	// Remove any cell flags and markers
 	marked_cells[row][column] = "";
 
 	// If cell isn't empty, show cell value
-	if (field[row][column] != 0) cell.html(field[row][column]);
-	else cell.html("");
-
-	// Add open_cell CSS class
-	cell.addClass("open_cell");
+	if (field[row][column] != 0) cell.children('.back').html(field[row][column]);
+	else cell.children(".back").html("");
 
 	// If cell has a numeric value, apply suited class
 	for (i = 1; i <= 8; i++)
@@ -58,7 +56,7 @@ function open_cell(row, column)
 	// If a mined cell was pressed, you're dead
 	if (field[row][column] == "*")
 	{
-		cell.addClass("mine");		// Apply mined CSS class
+		cell.children(".back").addClass("mine");		// Apply mined CSS class
 		alert("You're dead :(")		// Warn of death 
 		game_over();			// Call end of game function
 		
@@ -72,7 +70,7 @@ function open_cell(row, column)
 		game_over();			// Call end of game function
 		return;
 	}
-
+	
 	// If cell has zero value, recursively open all surrounding cells
 	if (field[row][column] == 0)
 	{
@@ -80,18 +78,52 @@ function open_cell(row, column)
 		{
 			for (j = -1; j < 2; j++)
 			{
-				if (row+i < 0) continue;
-				if (row+i >= rows_number) continue;
+				if (row + i < 0) continue;
+				if (row + i >= rows_number) continue;
 				if (column + j < 0) continue;
 				if (column + j >= cols_number) continue;
 				if (i == 0 && j == 0) continue;
 				if (open_cells[row + i][column + j] == 1) continue;
 
-				open_cell(row + i, column + j);
+				open_cell(row + i, column + j, stack_level + 1);
 			}
 		}
 	}
+	
+	if (stack_level == 0)
+	{
+		flip_open_cells();
+	}
 
+}
+
+
+// Perpetrate cell opening
+// ---------------------------------------------------------------------
+function flip_open_cells()
+{
+	var i, j, delay;
+	delay = 0;
+
+	// Flip all just opened cells in the same order they where opened
+	for (i = 0; i < just_opened_cells.length; i++)
+	{
+		var row = just_opened_cells[i][0];
+		var column = just_opened_cells[i][1];
+		
+		if (open_cells[row][column] == 1)
+		{
+			func = "$('#row" + row + "col" + column + "').addClass('open_cell');";
+
+			timeouts.push(setTimeout(func, 20 + delay));
+			
+			// 10ms delay between cells opening
+			delay += 20;
+		}
+	}
+
+	// Empty just opened cells array
+	just_opened_cells = [];
 }
 
 
@@ -157,12 +189,13 @@ function open_surrounding_cells()
 				// Do cell opening
 				if (marked_cells[row + i][column + j] != "M")
 				{
-					open_cell(row + i, column + j);
+					open_cell(row + i, column + j, 1);	// Stack start from 1 because at level 0 it calls flip. Instead is going to be called here
 				}
 			}
 		}
 	}
-
+	
+	flip_open_cells();
 
 }
 
@@ -172,10 +205,12 @@ function open_surrounding_cells()
 // ---------------------------------------------------------------------
 function game_over()
 {
+	flip_open_cells();
+	
 	var i, j;
 
 	// Game over, remove all cells listeners
-	$("td").unbind();
+	$(".cell").unbind();
 
 	// Show all mines position except the exploded one
 	for (i = 0; i < rows_number; i++)
@@ -185,13 +220,13 @@ function game_over()
 			// Show wrong marked mine
 			if (marked_cells[i][j] == "M" && field[i][j] != "*")
 			{
-				$("#row" + i + "col" + j).html("*").addClass("wrong_mine");
+				$("#row" + i + "col" + j + " .back").html("*").addClass("wrong_mine");
 			}
 
 			// Show non-marked mines
 			if (field[i][j] == "*" && open_cells[i][j] == 0)
 			{
-				$("#row" + i + "col" + j).html("*").addClass("demined");
+				$("#row" + i + "col" + j + " .front").html("*").addClass("demined");
 			}
 		}
 	}
@@ -243,8 +278,8 @@ function right_mouse_button(e)
 		// Get pressed cell row and column number
 		id = $(this).attr("id");
 
-		row = parseInt(id.substring( 3, id.indexOf("col")));
-		column = parseInt(id.substring( id.indexOf("col") + 3));
+		row = parseInt(id.substring(3, id.indexOf("col")));
+		column = parseInt(id.substring(id.indexOf("col") + 3));
 
 		// If cell is already open, do nothing
 		if (open_cells[row][column] == 1)
@@ -258,12 +293,12 @@ function right_mouse_button(e)
 		else if (marked_cells[row][column] == "?") marked_cells[row][column] = "";
 
 		// Write value into displayed cell
-		$("#row" + row + "col" + column).html(marked_cells[row][column]);
+		$("#row" + row + "col" + column + " .front").html(marked_cells[row][column]);
 
 		// If cell assumes mied state, remove opening cell listener
 		if (marked_cells[row][column] == "M")
 		{
-			$("#row" + row + "col"+column).unbind("click");
+			$("#row" + row + "col" + column).unbind("click");
 		}
 
 		// If cell is de-marked, reapply click-to-open listener

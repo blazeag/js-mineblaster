@@ -5,6 +5,8 @@ function generate_field()
 	var i, j;
 	var random;
 	
+	just_opened_cells = [];
+	
 	do
 	{
 		random = Math.floor(Math.random() * background_colors.length);
@@ -14,10 +16,10 @@ function generate_field()
 	current_background = random;
 	
 	
-
+	// Background color animation
 	$('body').stop().animate({'background-color': background_colors[random]});
 	
-	// Row by row
+	// Draw field row by row
 	for (i = 0; i < rows_number; i++)
 	{
 		field[i] = new Array();
@@ -48,27 +50,49 @@ function draw_field()
 	// Empty field
 	field.html('');
 
-	// Fraw field into a HTML table
-	field_string += '<table>';
+	// Draw field into a HTML table
+	field_string += '<div id="cells_container">';
 
 	// Row by row
 	for (i = 0; i < rows_number; i++)
 	{
-		field_string += '<tr>';
+		field_string += '<div class="row">';
 
 		// Column by column
 		for (j = 0; j < cols_number; j++)
 		{
-			field_string += '<td id="row' + i + 'col' + j + '"></td>';
+			field_string += '<div class="cell no_transition" id="row' + i + 'col' + j + '"><div class="front"></div><div class="back"></div></div>';
 		}
 
-		field_string += '</tr>';
+		field_string += '</div>';
 	}
 
-	field_string += '</table>';
+	field_string += '</div>';
 
 	// Insert HTML field string into field HTML element
 	field.append(field_string);
+	
+	
+	// Set field size
+	var window_w = $(window).width();
+	var window_h = $(window).height() - $('#field').position().top;
+	
+	var cell_w = window_w / cols_number;
+	var cell_h = window_h / rows_number;
+	cell_h = cell_w = Math.min(cell_w, cell_h);
+	
+	$("div.cell").width(cell_w);
+	$("div.cell").height(cell_h);
+	
+	var field_w = (cell_w * cols_number);
+	var field_h = cell_h * rows_number;
+	
+	$('#cells_container').width(field_w);
+	$('#cells_container').height(field_h);
+	
+	
+	$(".cell").removeClass("no_transition");
+
 }
 
 

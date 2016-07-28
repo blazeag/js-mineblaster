@@ -13,13 +13,17 @@ h1 {
 	padding: 5px 10px;
 }
 
-table {
-	margin: auto;
+div#field {
 	-webkit-user-select: none;
 	-moz-user-select: none;
 }
 
-td {
+div#cells_container {
+	margin: auto;
+}
+
+.cell {
+	display: inline-block;
 	cursor: default;
 	background: rgba(255, 255, 255, 0.5);
 	width: 50px;
@@ -27,6 +31,29 @@ td {
 	text-align: center;
 	vertical-align: middle;
 	font-weight: bold;
+	position: relative;
+	
+	transition: 0.6s;
+	transform-style: preserve-3d;
+}
+
+.cell.no_transition {
+	transition: none !important;
+}
+
+.cell .front, .cell .back {
+	backface-visibility: hidden;
+	position: absolute;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	box-sizing: border-box;
+	padding-top: 15px;
+	border: 1px rgba(0, 0, 0, 0.1) solid;
+}
+
+.cell .front {
+	z-index: 2;
 }
 
 #controls {
@@ -73,21 +100,31 @@ input[type="button"] {
 
 .open_cell {
 	background: #fff;
+	transform: rotateY(180deg);
 }
 
-.mine_1 { color: #090 }
-.mine_2 { color: #060 }
-.mine_3 { color: #009 }
-.mine_4 { color: #006 }
-.mine_5 { color: #660 }
-.mine_6 { color: #330 }
-.mine_7 { color: #900 }
-.mine_8 { color: #600 }
+.back {
+	transform: rotateY(180deg);
+}
 
-.mine { background-color: #900; color: #ff0; font-size: 30pt }
+.mine_1 { color: #090; }
+.mine_2 { color: #060; }
+.mine_3 { color: #009; }
+.mine_4 { color: #006; }
+.mine_5 { color: #660; }
+.mine_6 { color: #330; }
+.mine_7 { color: #900; }
+.mine_8 { color: #600; }
+
+.mine { background-color: #900; color: #ff0; font-size: 30pt; }
 .demined { background-color: #696; color: #ff0; font-size: 30pt }
 .wrong_mine { color: #f00; text-decoration: line-through; font-size: 30pt }
 
+.cell .front.demined,
+.cell .front.wrong_mine,
+.back.mine {
+	padding-top: 10px;
+}
 
 
 /* Small screens */
