@@ -205,8 +205,6 @@ function open_surrounding_cells()
 // ---------------------------------------------------------------------
 function game_over()
 {
-	flip_open_cells();
-	
 	var i, j;
 
 	// Game over, remove all cells listeners
@@ -220,7 +218,7 @@ function game_over()
 			// Show wrong marked mine
 			if (marked_cells[i][j] == "M" && field[i][j] != "*")
 			{
-				$("#row" + i + "col" + j + " .back").html("*").addClass("wrong_mine");
+				$("#row" + i + "col" + j + " .front").addClass("wrong_mine");
 			}
 
 			// Show non-marked mines
@@ -230,6 +228,8 @@ function game_over()
 			}
 		}
 	}
+	
+	flip_open_cells();
 }
 
 
