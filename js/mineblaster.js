@@ -120,5 +120,7 @@ $(document).ready( function () {
 
 	// When page is opened, initialize field with default values
 	initialize();
+	
+	$(window).resize(resize_field);
 
 });

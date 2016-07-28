@@ -61,7 +61,7 @@ function draw_field()
 		// Column by column
 		for (j = 0; j < cols_number; j++)
 		{
-			field_string += '<div class="cell no_transition" id="row' + i + 'col' + j + '"><div class="front"></div><div class="back"></div></div>';
+			field_string += '<div class="cell" id="row' + i + 'col' + j + '"><div class="front"></div><div class="back"></div></div>';
 		}
 
 		field_string += '</div>';
@@ -71,11 +71,22 @@ function draw_field()
 
 	// Insert HTML field string into field HTML element
 	field.append(field_string);
-	
-	
+
+	// Resize field to fit window width/height
+	resize_field();
+}
+
+
+
+
+function resize_field()
+{
+	// Enable transition effect for cells
+	$(".cell").addClass("no_transition");
+
 	// Set field size
 	var window_w = $(window).width();
-	var window_h = $(window).height() - $('#field').position().top;
+	var window_h = $(window).height() - $('#field').position().top - 15;
 	
 	var cell_w = window_w / cols_number;
 	var cell_h = window_h / rows_number;
@@ -90,9 +101,14 @@ function draw_field()
 	$('#cells_container').width(field_w);
 	$('#cells_container').height(field_h);
 	
+	font_size = cell_w / 2.5;
+	pad_top = cell_w / 4;
 	
+	// New font size and padding-top
+	$(".cell .front, .cell .back").css({fontSize: font_size + 'px', paddingTop: pad_top + 'px'});
+	
+	// Enable transition effect for cells
 	$(".cell").removeClass("no_transition");
-
 }
 
 
