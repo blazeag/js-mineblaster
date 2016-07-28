@@ -78,7 +78,8 @@ function draw_field()
 
 
 
-
+// Resize field cells to fit window size
+// ---------------------------------------------------------------------
 function resize_field()
 {
 	// Enable transition effect for cells
