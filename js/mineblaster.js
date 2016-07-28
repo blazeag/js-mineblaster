@@ -44,6 +44,9 @@ function initialize()
 	field = new Array();
 	open_cells = new Array();
 	marked_cells = new Array();
+	
+	// Remove end message, if present
+	$("#message_box").fadeOut();
 
 	for (i = 0; i < timeouts.length; i++)
 	{
@@ -111,12 +114,27 @@ function initialize()
 
 
 
+// Show message
+// ---------------------------------------------------------------------
+function message(msg)
+{
+	var msg_box = $('#message_box');
+	
+	msg_box.html(msg);
+	
+	msg_box.fadeIn();
+}
+
+
+
 // READY FUNCTION
 // ---------------------------------------------------------------------
 $(document).ready( function () {
 
 	// Regeneration button listener
 	$("#regenerate").mouseup(initialize);
+	
+	$('#message_box').click( function () { $(this).fadeOut(); });
 
 	// When page is opened, initialize field with default values
 	initialize();

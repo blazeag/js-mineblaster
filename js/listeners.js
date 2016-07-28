@@ -57,7 +57,7 @@ function open_cell(row, column, stack_level)
 	if (field[row][column] == "*")
 	{
 		cell.children(".back").addClass("mine");		// Apply mined CSS class
-		alert("You're dead :(")		// Warn of death 
+		message("You're dead :(")		// Warn of death 
 		game_over();			// Call end of game function
 		
 		return;
@@ -66,7 +66,7 @@ function open_cell(row, column, stack_level)
 	// If remaining unopened cells number is 0, I win
 	if (open_cells_number == (rows_number * cols_number) - mine_number)
 	{
-		alert("You win! :)");		// Warn of victory
+		message("You win! :)");		// Warn of victory
 		game_over();			// Call end of game function
 		return;
 	}

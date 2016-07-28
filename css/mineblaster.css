@@ -129,6 +129,21 @@ input[type="button"] {
 }
 
 
+/* Message box */
+#message_box {
+	padding: 30px;
+	text-align: center;
+	background-color: rgba(0, 0, 0, 0.5);
+	color: #fff;
+	font-size: 20pt;
+	position: fixed;
+	bottom: 0;
+	width: 100%;
+	display: none;
+	box-sizing: border-box;
+}
+
+
 /* Small screens */
 
 @media screen and (max-width: 480px)
