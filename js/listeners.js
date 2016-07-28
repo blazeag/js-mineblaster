@@ -38,7 +38,7 @@ function open_cell(row, column, stack_level)
 
 	// Flag cell as opened
 	open_cells[row][column] = 1;
-	just_opened_cells[just_opened_cells.length] = [row, column];
+	just_opened_cells.push([row, column]);
 
 	// Remove any cell flags and markers
 	marked_cells[row][column] = "";
@@ -108,6 +108,11 @@ function flip_open_cells()
 	// Flip all just opened cells in the same order they where opened
 	for (i = 0; i < just_opened_cells.length; i++)
 	{
+		if (i == 0 && navigator.vibrate && vibration)
+		{
+			navigator.vibrate(30);
+		}
+		
 		var row = just_opened_cells[i][0];
 		var column = just_opened_cells[i][1];
 		
@@ -291,6 +296,14 @@ function right_mouse_button(e)
 		if (marked_cells[row][column] == "") marked_cells[row][column] = "M";
 		else if (marked_cells[row][column] == "M") marked_cells[row][column] = "?";
 		else if (marked_cells[row][column] == "?") marked_cells[row][column] = "";
+		
+		// Vibrate on mobile devices
+		if (navigator.vibrate && vibration)
+		{
+			navigator.vibrate(30);
+		}
+
+
 
 		// Write value into displayed cell
 		$("#row" + row + "col" + column + " .front").html(marked_cells[row][column]);
@@ -309,5 +322,25 @@ function right_mouse_button(e)
 
 		// Update visual indicators
 		update_indicators();
+	}
+}
+
+
+function toggle_options()
+{
+	
+	if (options_opened)
+	{
+		var controls_h = $('#controls_box').outerHeight();
+		var indicators_h = $('#indicators').outerHeight();
+		
+		$('#controls_box').animate({'top': "-" + (controls_h - indicators_h) + 'px'});
+		
+		options_opened = false;
+	}
+	else
+	{
+		$('#controls_box').animate({'top': '0px'});
+		options_opened = true;
 	}
 }

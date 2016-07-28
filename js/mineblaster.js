@@ -18,6 +18,11 @@
  * if not, see <http://www.gnu.org/licenses/lgpl-2.1.html>.
  *****************************************************************************/
 
+// enable vibration support
+navigator.vibrate = navigator.vibrate || navigator.webkitVibrate || navigator.mozVibrate || navigator.msVibrate;
+var vibration = true;
+
+// Global variables
 var field;			// Array containing mines and cells values
 var open_cells;			// Array containing open cells boolean flags
 var marked_cells;		// Array containing cell markers
@@ -30,6 +35,8 @@ var rows_number;		// Field rows number
 var cols_number;		// Field columns number
 var mine_number;		// Field mines number
 var timeouts = [];		// Timeout container			
+
+var options_opened = true;
 
 var background_colors = ['#930', '#390', '#039', '#9a0', '#399', '#939', '#e50', '#999'];	// Background possible colors
 var current_background = '';
@@ -119,8 +126,12 @@ function initialize()
 function message(msg)
 {
 	var msg_box = $('#message_box');
+	var msg_div = $('<div id="message_text">' + msg + '</div>');
 	
-	msg_box.html(msg);
+	msg_y = ($('#message_box').outerHeight() - msg_div.outerHeight()) / 2;
+	msg_div.css({top: msg_y + 'px'});
+	
+	msg_box.html(msg_div);
 	
 	msg_box.fadeIn();
 }
@@ -135,10 +146,26 @@ $(document).ready( function () {
 	$("#regenerate").mouseup(initialize);
 	
 	$('#message_box').click( function () { $(this).fadeOut(); });
-
+	
 	// When page is opened, initialize field with default values
 	initialize();
 	
 	$(window).resize(resize_field);
+
+	// Toggle options and set option button listener
+	$('#options').click(toggle_options);
+	
+	$('#vibration').change(function () {
+		
+		if ($(this).is(':checked'))
+		{
+			vibration = true;
+		}
+		else
+		{
+			vibration = false;
+		}
+		
+	});
 
 });

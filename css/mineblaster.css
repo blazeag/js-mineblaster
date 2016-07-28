@@ -4,25 +4,61 @@ body {
 	font-family: arial, helvetica, sans-serif;
 	background: #fff; /* Background initial color */
 	text-align: center;
+	-webkit-user-select: none;
+	-moz-user-select: none;
 }
 
-#controls {
-	padding: 10px;
-	margin-bottom: 20px;
-	background: rgba(0, 0, 0, 0.2);
-	color: rgba(255, 255, 255, 0.5);
+#controls_box {
+	top: 0px;
+	background: #fff;
+	z-index: 2000;
 	position: fixed;
 	width: 100%;
 	box-sizing: border-box;
 }
 
+#controls {
+	padding: 10px;
+	padding-bottom: 0px;
+	background: rgba(0, 0, 0, 0.2);
+	color: rgba(255, 255, 255, 0.5);
+}
+
+#options {
+	float: right;
+	margin-right: 0px;
+	display: inline-block;
+	padding: 5px;
+	height: 15px;
+	width: 15px;
+	border-radius: 3px;
+	background-color: rgba(255, 255, 255, 0.7);
+	color: #000;
+	position: absolute;
+	bottom: 10px;
+	right: 5px;
+}
+
+.option {
+	margin-top: 10px;
+}
+
+#options, input[type='button'] {
+	cursor: pointer;
+}
+
 #parameters {
-	margin-bottom: 10px;
+	border-bottom: 1px rgba(0, 0, 0, 0.2) solid;
 }
 
 #parameters .parameter {
 	display: inline-block;
 	margin: 0px 5px;
+}
+
+#indicators {
+	padding-top: 10px;
+	padding-bottom: 10px;
 }
 
 #indicators span.indicator {
@@ -43,17 +79,21 @@ input[type='number'] {
 }
 
 input[type="button"] {
-	padding: 5px 15px;
-	margin-left: 20px;
-	background: rgba(255, 255, 255, 0.7);
+	padding: 10px 20px;
+	background: rgba(0, 0, 0, 0.3);
 	border: none;
 	border-radius: 3px;
+	margin: 10px 0px;
+	border: 2px rgba(255, 255, 255, 0.9) solid;
+	font-weight: bold;
+	font-size: 8pt;
+	text-transform: uppercase;
+	color: rgba(255, 255, 255, 0.9);
 }
 
 div#field {
-	-webkit-user-select: none;
-	-moz-user-select: none;
 	position: absolute;
+	z-index: 1000;
 }
 
 div#cells_container {
@@ -125,18 +165,29 @@ div#cells_container {
 }
 
 
+
 /* Message box */
+
 #message_box {
-	padding: 30px;
+	padding: 30px 0px;
 	text-align: center;
-	background-color: rgba(0, 0, 0, 0.5);
+	background-color: rgba(0, 0, 0, 0.7);
 	color: #fff;
 	font-size: 20pt;
 	position: fixed;
-	bottom: 0;
+	top: 0;
+	left: 0;
 	width: 100%;
+	height: 100%;
 	display: none;
 	box-sizing: border-box;
+	z-index: 3000;
+}
+
+#message_text {
+	box-sizing: border-box;
+	position: absolute;
+	width: 100%;
 }
 
 .short { display: none; }

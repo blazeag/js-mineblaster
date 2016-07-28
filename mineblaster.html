@@ -25,22 +25,27 @@
 	<body>
 
 		<!-- Controls container -->
-		<div id="controls">
-			
-			<!-- Field parameters container -->
-			<div id="parameters">
-				<span class="parameter"><span class="short">R</span><span class="long">Rows</span> <input type="number" id="rows_number" value="10" min="0" max="30" /></span>
-				<span class="parameter"><span class="short">C</span><span class="long">Columns</span> <input type="number" id="cols_number" value="10" min="0" max="30" /></span>
-				<span class="parameter"><span class="short">M</span><span class="long">Mines</span> <input type="number" id="mine_number" value="10" min="0" /></span>
-				<input id="regenerate" type="button" value="Go" />
-			</div>
+		<div id="controls_box">
+			<div id="controls">
+				
+				<!-- Field parameters container -->
+				<div id="parameters">
+					<span class="parameter"><span class="short">R</span><span class="long">Rows</span> <input type="number" id="rows_number" value="10" min="0" max="30" /></span>
+					<span class="parameter"><span class="short">C</span><span class="long">Columns</span> <input type="number" id="cols_number" value="10" min="0" max="30" /></span>
+					<span class="parameter"><span class="short">M</span><span class="long">Mines</span> <input type="number" id="mine_number" value="10" min="0" /></span>
 
-			<!-- Visual game indicators container -->
-			<div id="indicators">
-				<span class="indicator">Remaining cells: <span id="remaining_cells"></span></span>
-				<span class="indicator">Remaining mines: <span id="remaining_mines"></span></span>
+					<div class="option"><input type="checkbox" id="vibration" checked="true" /> Vibration</div>
+					<div><input id="regenerate" type="button" value="New Game" /></div>
+				</div>
+	
+				<!-- Visual game indicators container -->
+				<div id="indicators">
+					<span class="indicator">Cells left: <span id="remaining_cells"></span></span>
+					<span class="indicator">Mines left: <span id="remaining_mines"></span></span>
+					<span id="options">&#8801;</span>
+				</div>
+	
 			</div>
-
 		</div>
 
 
