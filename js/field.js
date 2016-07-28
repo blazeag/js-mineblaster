@@ -86,17 +86,17 @@ function resize_field()
 	$(".cell").addClass("no_transition");
 
 	// Set field size
-	var window_w = $(window).width();
-	var window_h = $(window).height() - $('#field').position().top - 15;
+	var window_w = $(window).outerWidth();
+	var window_h = $(window).outerHeight() - $('#controls').outerHeight() - 15;
 	
 	var cell_w = window_w / cols_number;
 	var cell_h = window_h / rows_number;
 	cell_h = cell_w = Math.min(cell_w, cell_h);
 	
 	// Minimum width
-	if (cell_w < 40)
+	if (cell_w < 30)
 	{
-		cell_w = cell_h = 40;
+		cell_w = cell_h = 30;
 	}
 	
 	$("div.cell").width(cell_w);
@@ -113,6 +113,17 @@ function resize_field()
 	
 	// New font size and padding-top
 	$(".cell .front, .cell .back").css({fontSize: font_size + 'px', paddingTop: pad_top + 'px'});
+
+	// Center horizontally
+	var offset_x = ($(window).outerWidth() - $('#field').outerWidth()) / 2;
+	$('#field').css({'left': offset_x + 'px'});
+
+	// Center vertically
+	var controls_height = $('#controls').outerHeight();
+	var field_y = (($(window).outerHeight() - controls_height - $('#field').outerHeight()) / 2);
+	if (field_y < 0) field_y = 0;
+	var offset_y = controls_height + field_y;
+	$('#field').css({'top': offset_y + 'px'});
 	
 	// Enable transition effect for cells
 	$(".cell").removeClass("no_transition");
