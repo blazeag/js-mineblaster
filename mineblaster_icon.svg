@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="476.61215"
+   height="520.60712"
+   id="svg6312"
+   sodipodi:version="0.32"
+   inkscape:version="0.91 r13725"
+   sodipodi:modified="true"
+   version="1.0"
+   sodipodi:docname="mineblaster_icon.svg">
+  <defs
+     id="defs6314" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="1.4"
+     inkscape:cx="143.78525"
+     inkscape:cy="299.02706"
+     inkscape:document-units="px"
+     inkscape:current-layer="g7579"
+     inkscape:window-width="1920"
+     inkscape:window-height="1017"
+     inkscape:window-x="1912"
+     inkscape:window-y="-8"
+     showgrid="false"
+     inkscape:snap-global="false"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata6317">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Capa 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-107.4078,-172.05911)">
+    <g
+       id="g7579"
+       transform="matrix(29.329979,0,0,29.329979,-12447.671,-15732.122)">
+      <path
+         transform="matrix(1,0,-0.0096679,1,5.3154778,0)"
+         style="fill:#ed5924;fill-opacity:1"
+         d="m 435.167,554.676 -3.911,0.942 1.632,-3.677 -4.825,-4.941 6.72771,2.41307 3.95419,-7.16307 -0.5069,7.551 6.075,1.449 -5.838,2.104 -0.314,4.01 0,0 z"
+         id="polygon7581"
+         inkscape:connector-curvature="0"
+         sodipodi:nodetypes="cccccccccccc" />
+      <path
+         style="fill:#ed5924;fill-opacity:1"
+         d="m 443.313,556.5 -6.17199,-2.26759 -3.04223,5.76759 -0.19078,-6.847 -3.009,-1.569 2.976,-1.486 -1.30944,-4.89356 4.20685,4.15903 5.03645,-0.44058 -3.37086,2.76511 z"
+         id="polygon7583"
+         inkscape:connector-curvature="0"
+         sodipodi:nodetypes="ccccccccccc" />
+    </g>
+  </g>
+</svg>
