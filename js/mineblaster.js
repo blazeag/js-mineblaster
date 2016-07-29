@@ -175,6 +175,10 @@ $(document).ready( function () {
 
 	// Toggle options and set option button listener
 	$('#options').click(toggle_options);
+	$('#controls_box').click(function(event){
+		event.stopPropagation();
+	});
+	$(document).click(close_options);
 	
 	$('#vibration').change(function () {
 		
