@@ -29,7 +29,8 @@ body {
 	margin-right: 0px;
 	display: inline-block;
 	padding: 5px;
-	height: 15px;
+	padding-top: 3px;
+	height: 17px;
 	width: 15px;
 	border-radius: 3px;
 	background-color: rgba(255, 255, 255, 0.7);
@@ -89,6 +90,11 @@ input[type="button"] {
 	font-size: 8pt;
 	text-transform: uppercase;
 	color: rgba(255, 255, 255, 0.9);
+}
+
+input[type="button"]:hover {
+	background: #fff;
+	color: #000;
 }
 
 div#field {
@@ -191,6 +197,13 @@ div#cells_container {
 }
 
 .short { display: none; }
+
+#msg_new_game {
+	display: block;
+	margin: auto;
+	margin-top: 20px;
+	position: relative;
+}
 
 
 /* Small screens */

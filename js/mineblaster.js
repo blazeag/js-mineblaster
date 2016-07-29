@@ -125,15 +125,36 @@ function initialize()
 // ---------------------------------------------------------------------
 function message(msg)
 {
+	$('#msg_new_game').unbind('click');
+
 	var msg_box = $('#message_box');
 	var msg_div = $('<div id="message_text">' + msg + '</div>');
 	
-	msg_y = ($('#message_box').outerHeight() - msg_div.outerHeight()) / 2;
-	msg_div.css({top: msg_y + 'px'});
-	
 	msg_box.html(msg_div);
 	
+	$('#message_text').append('<input type="button" id="msg_new_game" value="New Game">');
+	$('#msg_new_game').click(initialize);
+	
+	msg_box.css({visibility: 'hidden'});
+	msg_box.show();
+
+	center_message();
+	
+	msg_box.hide();
+	msg_box.css({visibility: 'visible'});
+	
+	
 	msg_box.fadeIn();
+}
+
+
+
+// Center message vertically
+// ---------------------------------------------------------------------
+function center_message()
+{
+	var msg_y = ($('#message_box').outerHeight() - $('#message_text').outerHeight()) / 2;
+	$('#message_text').css({top: msg_y + 'px'});
 }
 
 

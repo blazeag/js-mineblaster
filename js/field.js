@@ -1,14 +1,17 @@
 // Field data arrays initialization
 // ---------------------------------------------------------------------
-function generate_field() {
+function generate_field()
+{
 	var i, j;
 	var random;
 
 	just_opened_cells = [];
 
-	do {
+	do
+	{
 		random = Math.floor(Math.random() * background_colors.length);
-	} while (random == current_background);
+	}
+	while (random == current_background);
 
 	current_background = random;
 
@@ -22,13 +25,15 @@ function generate_field() {
 	});
 
 	// Draw field row by row
-	for (i = 0; i < rows_number; i++) {
+	for (i = 0; i < rows_number; i++)
+	{
 		field[i] = new Array();
 		open_cells[i] = new Array();
 		marked_cells[i] = new Array();
 
 		// Column by column
-		for (j = 0; j < cols_number; j++) {
+		for (j = 0; j < cols_number; j++)
+		{
 			field[i][j] = "";
 			marked_cells[i][j] = "";
 			open_cells[i][j] = 0;
@@ -123,10 +128,10 @@ function resize_field()
 
 	// Center vertically
 	var controls_height = $('#indicators').outerHeight() + 10;
-	var field_y = (($(window).outerHeight() - controls_height - $('#field')
-			.outerHeight()) / 2);
-	if (field_y < 0)
-		field_y = 0;
+	var field_y = (($(window).outerHeight() - controls_height - $('#field').outerHeight()) / 2);
+	
+	if (field_y < 0) field_y = 0;
+	
 	var offset_y = controls_height + field_y;
 	$('#field').css({
 		'top' : offset_y + 'px'
@@ -139,9 +144,11 @@ function resize_field()
 	var controls_h = $('#controls_box').outerHeight();
 	var indicators_h = $('#indicators').outerHeight();
 	
-	$('#controls_box').animate({'top': "-" + (controls_h - indicators_h) + 'px'});
+	$('#controls_box').css({'top': "-" + (controls_h - indicators_h) + 'px'});
 	
 	options_opened = false;
+	
+	center_message();
 }
 
 // Cell value calculation
