@@ -326,21 +326,42 @@ function right_mouse_button(e)
 }
 
 
+
+// Toggle options menu
+// --------------------------------------------------------
 function toggle_options()
 {
-	
-	if (options_opened)
+	if (! options_opened)
 	{
-		var controls_h = $('#controls_box').outerHeight();
-		var indicators_h = $('#indicators').outerHeight();
-		
-		$('#controls_box').animate({'top': "-" + (controls_h - indicators_h) + 'px'});
-		
-		options_opened = false;
+		open_options();
 	}
+	
 	else
 	{
-		$('#controls_box').animate({'top': '0px'});
-		options_opened = true;
+		close_options();
 	}
+}
+
+
+
+// Open options menu
+// --------------------------------------------------------
+function open_options()
+{
+	$('#controls_box').animate({'top': '0px'});
+	options_opened = true;
+}
+
+
+
+// Close options menu
+// --------------------------------------------------------
+function close_options()
+{
+	var controls_h = $('#controls_box').outerHeight();
+	var indicators_h = $('#indicators').outerHeight();
+
+	$('#controls_box').animate({'top': "-" + (controls_h - indicators_h) + 'px'});
+
+	options_opened = false;
 }

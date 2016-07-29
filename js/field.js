@@ -39,6 +39,9 @@ function generate_field()
 			open_cells[i][j] = 0;
 		}
 	}
+	
+	// Close options
+	close_options();
 }
 
 // Field drawing procedure
@@ -139,15 +142,8 @@ function resize_field()
 
 	// Enable transition effect for cells
 	$(".cell").removeClass("no_transition");
-	
-	// Close options
-	var controls_h = $('#controls_box').outerHeight();
-	var indicators_h = $('#indicators').outerHeight();
-	
-	$('#controls_box').css({'top': "-" + (controls_h - indicators_h) + 'px'});
-	
-	options_opened = false;
-	
+
+	// Centers message, if open
 	center_message();
 }
 
