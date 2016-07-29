@@ -159,7 +159,7 @@ function center_message()
 
 
 
-// READY FUNCTION
+// READY
 // ---------------------------------------------------------------------
 $(document).ready( function () {
 
