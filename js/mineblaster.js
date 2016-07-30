@@ -37,7 +37,9 @@ var mine_number;		// Field mines number
 var timeouts = [];		// Timeout container			
 
 var options_opened = true;
+var preloaded_images = new Array();
 
+var images = ['imgs/mineblaster_icon.svg', 'imgs/wrong_mine.svg', 'imgs/menu.svg', 'imgs/mine.svg'];
 var background_colors = ['#930', '#390', '#039', '#9a0', '#399', '#939', '#e50', '#999'];	// Background possible colors
 var current_background = '';
 
@@ -118,6 +120,19 @@ function initialize()
 	$("#field").bind("contextmenu", function (e) {		// Avoid cells contextual menu on right mouse button click
 		e.preventDefault();
 	});
+}
+
+
+
+function preload_images()
+{
+	var i;
+	
+	for (i = 0; i < images.length; i++)
+	{
+		preloaded_images[i] = new Image();
+		preloaded_images[i].src = images[i];
+	}
 }
 
 
