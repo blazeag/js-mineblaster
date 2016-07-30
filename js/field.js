@@ -56,30 +56,23 @@ function draw_field()
 	field.html('');
 
 	// Draw field into a HTML table
-	field_string += '<div id="cells_container">';
+	var cells_container = $('<div id="cells_container">');
 
 	// Row by row
 	for (i = 0; i < rows_number; i++)
 	{
-		field_string += '<div class="row">';
-
 		// Column by column
 		for (j = 0; j < cols_number; j++)
 		{
-			field_string += '<div class="cell" id="row'
-			+ i
-			+ 'col'
-			+ j
-			+ '"><div class="front"></div><div class="back"></div></div>';
+			var cell_id = 'row' + i + 'col' + j;
+			var cell = $('<div class="cell_container"><div class="cell" id="' + cell_id + '"><div class="front"></div><div class="back"></div></div></div>');
+			
+			cells_container.append(cell);
 		}
-
-		field_string += '</div>';
 	}
 
-	field_string += '</div>';
-
 	// Insert HTML field string into field HTML element
-	field.append(field_string);
+	field.append(cells_container);
 
 	// Resize field to fit window width/height
 	resize_field();
@@ -89,6 +82,8 @@ function draw_field()
 // ---------------------------------------------------------------------
 function resize_field()
 {
+	var i, j;
+	
 	// Enable transition effect for cells
 	$(".cell").addClass("no_transition");
 
@@ -101,12 +96,18 @@ function resize_field()
 	cell_h = cell_w = Math.min(cell_w, cell_h);
 
 	// Minimum width
-	if (cell_w < 30) {
+	if (cell_w < 30)
+	{
 		cell_w = cell_h = 30;
 	}
 
-	$("div.cell").width(cell_w);
-	$("div.cell").height(cell_h);
+	// Only integer cell sizes, due to firefox collapsing some adjacent borders
+	// when using decimal sizes
+	cell_w = Math.floor(cell_w);
+	cell_h = Math.floor(cell_h);
+
+	$("div.cell_container").width(cell_w);
+	$("div.cell_container").height(cell_h);
 
 	var field_w = (cell_w * cols_number);
 	var field_h = cell_h * rows_number;
@@ -117,7 +118,7 @@ function resize_field()
 	font_size = cell_w / 2.5;
 	pad_top = cell_w / 4;
 
-	// New font size and padding-top
+	// Trick to vertically center numbers
 	$(".cell .front, .cell .back").css({
 		fontSize : font_size + 'px',
 		paddingTop : pad_top + 'px'
@@ -139,6 +140,19 @@ function resize_field()
 	$('#field').css({
 		'top' : offset_y + 'px'
 	});
+	
+	for (i = 0; i < rows_number; i++)
+	{
+		for (j = 0; j < cols_number; j++)
+		{
+			var cell = $('#row' + i + 'col' + j);
+			
+			var y = i * cell_h;
+			var x = j * cell_w;
+			
+			cell.parent().css({top: y, left: x});
+		}
+	}
 
 	// Enable transition effect for cells
 	$(".cell").removeClass("no_transition");

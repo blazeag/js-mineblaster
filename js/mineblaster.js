@@ -76,27 +76,28 @@ function initialize()
 
 	if (rows_number < 1 || rows_number > max_rows_number)
 	{
-		alert("Max rows number is " + max_rows_number + "!");
+		message("Max rows number is " + max_rows_number + "!", 300);
 		$('#rows_number').val(max_rows_number);
 		return false;
 	}
 	
 	if (cols_number < 1 || cols_number > max_cols_number)
 	{
-		alert("Max columns number is " + max_cols_number + "!");
+		message("Max columns number is " + max_cols_number + "!", 300);
 		$('#cols_number').val(max_cols_number);
 		return false;
 	}
 
 	if (mine_number <= 0)
 	{
-		alert("Put at least one mine in the field!");
+		message("Put at least one mine in the field!", 300);
 		return false;
 	}
 
 	if (mine_number > (rows_number * cols_number) - 1)
 	{
-		alert("Mines saturate field!");
+		var max_mines = (rows_number * cols_number) - 1;
+		message("Mines saturate field!<br />Please decrease number of mines to a maximum of " + max_mines, 300);
 		return false;
 	}
 
@@ -123,8 +124,13 @@ function initialize()
 
 // Show message
 // ---------------------------------------------------------------------
-function message(msg)
+function message(msg, timing, new_game_bt)
 {
+	if (new_game_bt === undefined)
+	{
+		new_game_bt = false;
+	}
+	
 	$('#msg_new_game').unbind('click');
 
 	var msg_box = $('#message_box');
@@ -132,8 +138,11 @@ function message(msg)
 	
 	msg_box.html(msg_div);
 	
-	$('#message_text').append('<input type="button" id="msg_new_game" value="New Game">');
-	$('#msg_new_game').click(initialize);
+	if (new_game_bt)
+	{
+		$('#message_text').append('<input type="button" id="msg_new_game" value="New Game">');
+		$('#msg_new_game').click(initialize);
+	}
 	
 	msg_box.css({visibility: 'hidden'});
 	msg_box.show();
@@ -144,7 +153,7 @@ function message(msg)
 	msg_box.css({visibility: 'visible'});
 	
 	
-	msg_box.fadeIn();
+	msg_box.fadeIn(timing);
 }
 
 
@@ -175,7 +184,7 @@ $(document).ready( function () {
 
 	// Toggle options and set option button listener
 	$('#options').click(toggle_options);
-	$('#controls_box').click(function(event){
+	$('#controls_box, #message_box').click(function(event){
 		event.stopPropagation();
 	});
 	$(document).click(close_options);

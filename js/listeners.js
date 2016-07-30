@@ -57,7 +57,7 @@ function open_cell(row, column, stack_level)
 	if (field[row][column] == "*")
 	{
 		cell.children(".back").html('').addClass("mine");		// Apply mined CSS class
-		message("You're dead :(")		// Warn of death 
+		setTimeout("message(\"You're dead :(\", 500, true)", 1000);		// Warn of death 
 		game_over();			// Call end of game function
 		
 		return;
@@ -66,7 +66,7 @@ function open_cell(row, column, stack_level)
 	// If remaining unopened cells number is 0, I win
 	if (open_cells_number == (rows_number * cols_number) - mine_number)
 	{
-		message("You win! :)");		// Warn of victory
+		setTimeout("message(\"You win! :)\", 500, true)", 1000);		// Warn of victory
 		game_over();			// Call end of game function
 		return;
 	}
@@ -223,13 +223,13 @@ function game_over()
 			// Show wrong marked mine
 			if (marked_cells[i][j] == "M" && field[i][j] != "*")
 			{
-				$("#row" + i + "col" + j + " .front").addClass("wrong_mine");
+				$("#row" + i + "col" + j + " .front").html('').addClass("wrong_mine");
 			}
 
 			// Show non-marked mines
 			if (field[i][j] == "*" && open_cells[i][j] == 0)
 			{
-				$("#row" + i + "col" + j + " .front").addClass("demined");
+				$("#row" + i + "col" + j + " .front").html('').addClass("demined");
 			}
 		}
 	}
