@@ -16,7 +16,7 @@
    viewBox="0 0 52.001144 51.21122"
    xml:space="preserve"
    inkscape:version="0.91 r13725"
-   sodipodi:docname="mine2.svg"
+   sodipodi:docname="wrong_mine.svg"
    width="52.001144"
    height="51.21122"><metadata
      id="metadata3496"><rdf:RDF><cc:Work
@@ -151,4 +151,12 @@
                                    id="path3490"
                                    inkscape:connector-curvature="0"
                                    style="fill:#ffffff;fill-opacity:1"
-                                   sodipodi:nodetypes="sssss" /></g></g></g></g></g></g></g></g></g></g></g></g></g></g></g></svg>
+                                   sodipodi:nodetypes="sssss" /></g></g></g></g></g></g></g></g></g></g></g></g></g></g><path
+       style="fill:none;fill-rule:evenodd;stroke:#ff0000;stroke-width:5;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="M 6.0624961,54.24877 53.113565,7.9884752 Z"
+       id="path4159"
+       inkscape:connector-curvature="0" /><path
+       style="fill:none;fill-rule:evenodd;stroke:#ff0000;stroke-width:5;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="M 53.212411,54.051077 6.1613435,7.7907816 Z"
+       id="path4159-3"
+       inkscape:connector-curvature="0" /></g></svg>
