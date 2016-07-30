@@ -1,6 +1,8 @@
+var field = {};
+
 // Field data arrays initialization
 // ---------------------------------------------------------------------
-function generate_field()
+field.generate = function ()
 {
 	var i, j;
 	var random;
@@ -44,9 +46,11 @@ function generate_field()
 	close_options();
 }
 
+
+
 // Field drawing procedure
 // ---------------------------------------------------------------------
-function draw_field()
+field.draw = function ()
 {
 	var i, j; // Counters
 	var field = $('#field'); // Field HTML element
@@ -78,9 +82,11 @@ function draw_field()
 	resize_field();
 }
 
+
+
 // Resize field cells to fit window size
 // ---------------------------------------------------------------------
-function resize_field()
+field.resize = function ()
 {
 	var i, j;
 	
@@ -161,9 +167,11 @@ function resize_field()
 	center_message();
 }
 
+
+
 // Cell value calculation
 // ---------------------------------------------------------------------
-function calculate_cells_values()
+field.calculate_cells_values = function ()
 {
 	var adjacent_mines;
 	var i, j, k, w;
@@ -209,9 +217,11 @@ function calculate_cells_values()
 
 }
 
+
+
 // Mine positioning
 // ---------------------------------------------------------------------
-function plant_mines()
+field.plant_mines = function ()
 {
 	var i;
 	var random_row, random_column;
