@@ -187,6 +187,9 @@ function center_message()
 // ---------------------------------------------------------------------
 $(document).ready( function () {
 
+	// Preload images
+	preload_images();
+	
 	// Regeneration button listener
 	$("#regenerate").mouseup(initialize);
 	
