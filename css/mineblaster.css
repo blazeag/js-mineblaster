@@ -33,11 +33,15 @@ body {
 	height: 17px;
 	width: 15px;
 	border-radius: 3px;
-	background-color: rgba(255, 255, 255, 0.7);
 	color: #000;
 	position: absolute;
 	bottom: 10px;
 	right: 5px;
+	background-color: rgba(255, 255, 255, 0.7);
+	background-image: url('../imgs/menu.svg');
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: 50%;
 }
 
 .option {
@@ -159,8 +163,20 @@ div#cells_container {
 .mine_7 { color: #900; }
 .mine_8 { color: #600; }
 
-.mine { background-color: #900; color: #ff0; }
-.demined { background-color: #696; color: #ff0; }
+.mine {
+	background-color: #900;
+	color: #ff0;
+	background-image: url('../imgs/mineblaster_icon.svg');
+	background-size: cover;
+	background-repeat: no-repeat;
+}
+.demined {
+	background-color: #696; color: #ff0;
+	background-image: url('../imgs/mine.svg');
+	background-size: 50%;
+	background-position: center;
+	background-repeat: no-repeat;
+}
 .wrong_mine { color: #f00; text-decoration: line-through; }
 
 .cell .front.demined,

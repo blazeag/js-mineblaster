@@ -56,7 +56,7 @@ function open_cell(row, column, stack_level)
 	// If a mined cell was pressed, you're dead
 	if (field[row][column] == "*")
 	{
-		cell.children(".back").addClass("mine");		// Apply mined CSS class
+		cell.children(".back").html('').addClass("mine");		// Apply mined CSS class
 		message("You're dead :(")		// Warn of death 
 		game_over();			// Call end of game function
 		
@@ -229,7 +229,7 @@ function game_over()
 			// Show non-marked mines
 			if (field[i][j] == "*" && open_cells[i][j] == 0)
 			{
-				$("#row" + i + "col" + j + " .front").html("*").addClass("demined");
+				$("#row" + i + "col" + j + " .front").addClass("demined");
 			}
 		}
 	}
