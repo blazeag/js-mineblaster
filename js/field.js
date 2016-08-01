@@ -16,13 +16,12 @@ mineblaster.field.timeouts = [];		// Timeout container
 
 
 
-
 mineblaster.field.initialize = function ()
 {
 	// Empty arrays
-	this.field = new Array();
-	this.open_cells = new Array();
-	this.marked_cells = new Array();
+	mineblaster.field.field = new Array();
+	mineblaster.field.open_cells = new Array();
+	mineblaster.field.marked_cells = new Array();
 	
 	// Change background color
 	mineblaster.gui.change_background();
@@ -126,7 +125,7 @@ mineblaster.field.right_mouse_button = function(e)
 		else if (mineblaster.field.marked_cells[row][column] == "?") mineblaster.field.marked_cells[row][column] = "";
 		
 		// Vibrate on mobile devices
-		if (navigator.vibrate && vibration)
+		if (navigator.vibrate && mineblaster.vibration)
 		{
 			navigator.vibrate(30);
 		}
@@ -453,6 +452,7 @@ mineblaster.field.open_cell = function (row, column, stack_level)
 	if (mineblaster.field.open_cells_number == (mineblaster.field.rows_number * mineblaster.field.cols_number) - mineblaster.field.mine_number)
 	{
 		setTimeout("mineblaster.gui.message.show(\"You win! :)\", 500, true)", 1000);		// Warn of victory
+		$('#remaining_cells, #remaining_mines').html('0');
 		mineblaster.game_over();			// Call end of game function
 		return;
 	}
@@ -494,7 +494,7 @@ mineblaster.field.flip_open_cells = function ()
 	// Flip all just opened cells in the same order they where opened
 	for (i = 0; i < mineblaster.field.just_opened_cells.length; i++)
 	{
-		if (i == 0 && navigator.vibrate && vibration)
+		if (i == 0 && navigator.vibrate && mineblaster.vibration)
 		{
 			navigator.vibrate(30);
 		}

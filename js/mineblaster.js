@@ -55,11 +55,11 @@ mineblaster.initialize = function()
 		
 		if ($(this).is(':checked'))
 		{
-			vibration = true;
+			mineblaster.vibration = true;
 		}
 		else
 		{
-			vibration = false;
+			mineblaster.vibration = false;
 		}
 		
 	});
