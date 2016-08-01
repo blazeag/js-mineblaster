@@ -25,7 +25,7 @@ navigator.vibrate = navigator.vibrate || navigator.webkitVibrate || navigator.mo
 var mineblaster = new Object();
 
 // enable vibration support
-mineblaster.vibration = true;
+mineblaster.vibration;
 
 
 
@@ -33,37 +33,91 @@ mineblaster.vibration = true;
 // ---------------------------------------------------------------------
 mineblaster.initialize = function()
 {
-	mineblaster.field.initialize();
+	// Load cookies
+	mineblaster.load_cookies();
 
-	// Regeneration button listener
-	$("#regenerate").mouseup(mineblaster.field.initialize);
+	// Initializations
+	mineblaster.gui.initialize();		// GUI initialization
+	mineblaster.field.initialize();		// Field initialization
 
-	// Message fadeout on click
-	$('#message_box').click(function () { $(this).fadeOut(); });
-	
 	// Resize field on resize window
 	$(window).resize(mineblaster.field.resize);
 
-	// Toggle options and set option button listener
-	$('#options').click(mineblaster.gui.menu.toggle);
-	$('#controls_box, #message_box').click(function(event) {
-		event.stopPropagation();
-	});
-	$(document).click(mineblaster.gui.menu.close);
-	
-	$('#vibration').change(function () {
-		
-		if ($(this).is(':checked'))
-		{
-			mineblaster.vibration = true;
-		}
-		else
-		{
-			mineblaster.vibration = false;
-		}
-		
-	});
+}
 
+
+// Cookie loading
+// ---------------------------------------------------------------------
+mineblaster.load_cookies = function ()
+{
+	var i;
+	var ca;
+	
+	mineblaster.vibration = true;
+	mineblaster.field.rows_number = 10;
+	mineblaster.field.cols_number = 10;
+	mineblaster.field.mine_number = 10;
+	
+    ca = document.cookie.split(';');
+    
+    for(i = 0; i < ca.length; i++)
+    {
+        var c = ca[i];
+        
+        while (c.charAt(0) == ' ')
+        {
+            c = c.substring(1);
+        }
+        
+        if (c.indexOf('rows_number') == 0)
+        {
+        	mineblaster.field.rows_number = c.substring(12, c.length);
+        }
+        
+        if (c.indexOf("cols_number") == 0)
+        {
+        	mineblaster.field.cols_number = c.substring(12, c.length);
+        }
+        
+        if (c.indexOf("mine_number") == 0)
+        {
+        	mineblaster.field.mine_number = c.substring(12, c.length);
+        }
+        
+        if (c.indexOf("vibration") == 0)
+        {
+        	mineblaster.vibration = (c.substring(10, c.length) === 'true') ? true : false;
+        }
+    }
+    
+    
+    // Set values in parameters textfields
+	$('#rows_number').val(mineblaster.field.rows_number);
+	$('#cols_number').val(mineblaster.field.cols_number);
+	$('#mine_number').val(mineblaster.field.mine_number);
+	$('#vibration').prop('checked', mineblaster.vibration);
+	
+	//document.cookie = "username=John Doe; expires=Thu, 18 Dec 2013 12:00:00 UTC; path=/";
+}
+
+
+
+// Set a cookie
+// ---------------------------------------------------------------------
+mineblaster.setcookie = function (name, value)
+{
+    var d = new Date();
+    var expiration_days = 30;
+    
+    d.setTime(d.getTime() + (expiration_days * 24 * 60 * 60 * 1000));
+    
+    var expires = "expires="+ d.toUTCString();
+    
+    var cookie_str = name + "=" + value + "; " + expires;
+    
+    document.cookie = cookie_str;
+    
+    console.log('Cookie set: ' + cookie_str);
 }
 
 

@@ -18,13 +18,20 @@ mineblaster.field.timeouts = [];		// Timeout container
 
 mineblaster.field.initialize = function ()
 {
+	// Change background color
+	mineblaster.gui.change_background(mineblaster.field.rebuild);
+}
+
+
+
+// Rebuild field
+// ---------------------------------------------------------------------
+mineblaster.field.rebuild = function ()
+{
 	// Empty arrays
 	mineblaster.field.field = new Array();
 	mineblaster.field.open_cells = new Array();
 	mineblaster.field.marked_cells = new Array();
-	
-	// Change background color
-	mineblaster.gui.change_background();
 	
 	// Remove end message, if present
 	$("#message_box").fadeOut();
@@ -74,6 +81,11 @@ mineblaster.field.initialize = function ()
 		mineblaster.gui.message.show("Mines saturate field!<br />Please decrease number of mines to a maximum of " + max_mines, 300);
 		return false;
 	}
+	
+	// Set cookies
+	mineblaster.setcookie('rows_number', mineblaster.field.rows_number);
+	mineblaster.setcookie('cols_number', mineblaster.field.cols_number);
+	mineblaster.setcookie('mine_number', mineblaster.field.mine_number);
 
 	// Field disposition
 	mineblaster.field.generate();
@@ -93,6 +105,7 @@ mineblaster.field.initialize = function ()
 	$("#field").bind("contextmenu", function (e) {		// Avoid cells contextual menu on right mouse button click
 		e.preventDefault();
 	});
+	
 }
 
 
@@ -196,9 +209,8 @@ mineblaster.field.draw = function ()
 	// Empty field
 	field.html('');
 
-	// Draw field into a HTML table
-	var cells_container = $('<div id="cells_container">');
-
+	var field_str = "";
+	
 	// Row by row
 	for (i = 0; i < mineblaster.field.rows_number; i++)
 	{
@@ -206,14 +218,12 @@ mineblaster.field.draw = function ()
 		for (j = 0; j < mineblaster.field.cols_number; j++)
 		{
 			var cell_id = 'row' + i + 'col' + j;
-			var cell = $('<div class="cell_container"><div class="cell" id="' + cell_id + '"><div class="front"></div><div class="back"></div></div></div>');
-			
-			cells_container.append(cell);
+			field_str += '<div class="cell" id="' + cell_id + '"><div class="front"></div><div class="back"></div></div>';
 		}
 	}
 
 	// Insert HTML field string into field HTML element
-	field.append(cells_container);
+	field.append(field_str);
 
 	// Resize field to fit window width/height
 	mineblaster.field.resize();
@@ -227,7 +237,7 @@ mineblaster.field.resize = function ()
 {
 	var i, j;
 	
-	// Enable transition effect for cells
+	// Disable transition effect for cells
 	$(".cell").addClass("no_transition");
 
 	// Set field size
@@ -249,14 +259,14 @@ mineblaster.field.resize = function ()
 	cell_w = Math.floor(cell_w);
 	cell_h = Math.floor(cell_h);
 
-	$("div.cell_container").width(cell_w);
-	$("div.cell_container").height(cell_h);
+	$("div.cell").width(cell_w);
+	$("div.cell").height(cell_h);
 
 	var field_w = (cell_w * mineblaster.field.cols_number);
 	var field_h = cell_h * mineblaster.field.rows_number;
 
-	$('#cells_container').width(field_w);
-	$('#cells_container').height(field_h);
+	$('#field').width(field_w);
+	$('#field').height(field_h);
 
 	font_size = cell_w / 2.5;
 	pad_top = cell_w / 4;
@@ -267,13 +277,13 @@ mineblaster.field.resize = function ()
 		paddingTop : pad_top + 'px'
 	});
 
-	// Center horizontally
+	// Center field horizontally
 	var offset_x = ($(window).outerWidth() - $('#field').outerWidth()) / 2;
 	$('#field').css({
 		'left' : offset_x + 'px'
 	});
 
-	// Center vertically
+	// Center field vertically
 	var controls_height = $('#indicators').outerHeight() + 10;
 	var field_y = (($(window).outerHeight() - controls_height - $('#field').outerHeight()) / 2);
 	
@@ -284,20 +294,7 @@ mineblaster.field.resize = function ()
 		'top' : offset_y + 'px'
 	});
 	
-	for (i = 0; i < mineblaster.field.rows_number; i++)
-	{
-		for (j = 0; j < mineblaster.field.cols_number; j++)
-		{
-			var cell = $('#row' + i + 'col' + j);
-			
-			var y = i * cell_h;
-			var x = j * cell_w;
-			
-			cell.parent().css({top: y, left: x});
-		}
-	}
-
-	// Enable transition effect for cells
+	// Re-enable transition effect for cells
 	$(".cell").removeClass("no_transition");
 
 	// Centers message, if open

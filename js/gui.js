@@ -9,6 +9,43 @@ mineblaster.gui.current_background = '';
 
 
 
+// GUI initialization
+// --------------------------------------------------------
+mineblaster.gui.initialize = function ()
+{
+	// Toggle options and set option button listener
+	$('#options').click(mineblaster.gui.menu.toggle);
+	$('#controls_box, #message_box').click(function(event) {
+		event.stopPropagation();
+	});
+	$(document).click(mineblaster.gui.menu.close);
+	
+	$('#vibration').change(function () {
+		
+		if ($(this).is(':checked'))
+		{
+			mineblaster.vibration = true;
+		}
+		else
+		{
+			mineblaster.vibration = false;
+		}
+		
+		// Set cookie
+		mineblaster.setcookie('vibration', mineblaster.vibration);
+		
+	});
+
+	// Regeneration button listener
+	$("#regenerate").mouseup(mineblaster.field.initialize);
+
+	// Message fadeout on click
+	$('#message_box').click(function () { $(this).fadeOut(); });
+	
+}
+
+
+
 // Preload GUI images
 // --------------------------------------------------------
 mineblaster.gui.preload_images = function ()
@@ -23,9 +60,10 @@ mineblaster.gui.preload_images = function ()
 }
 
 
+
 // Change background color
 // ---------------------------------------------------------------------
-mineblaster.gui.change_background = function ()
+mineblaster.gui.change_background = function (callback)
 {
 	do
 	{
@@ -35,14 +73,10 @@ mineblaster.gui.change_background = function ()
 
 	mineblaster.gui.current_background = random;
 
-	$('#controls_box').stop().animate({
-		'background-color' : mineblaster.gui.background_colors[random]
-	});
-
 	// Background color animation
-	$('body').stop().animate({
+	$('body, #controls_box').stop().animate({
 		'background-color' : mineblaster.gui.background_colors[random]
-	});
+	}, callback);
 
 }
 
