@@ -41,14 +41,14 @@ mineblaster.field.initialize = function ()
 		return false;
 	};
 	
-	// Close options, if open
-	mineblaster.gui.menu.close();
-
 	// Remove end message, if present
 	$("#message_box").fadeOut();
 
 	// Change background color and then call field rebuilding
 	mineblaster.gui.change_background(mineblaster.field.rebuild);
+
+	// Close options, if open
+	mineblaster.gui.menu.close();
 }
 
 
