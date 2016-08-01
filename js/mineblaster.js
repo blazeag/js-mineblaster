@@ -18,194 +18,38 @@
  * if not, see <http://www.gnu.org/licenses/lgpl-2.1.html>.
  *****************************************************************************/
 
-// enable vibration support
 navigator.vibrate = navigator.vibrate || navigator.webkitVibrate || navigator.mozVibrate || navigator.msVibrate;
-var vibration = true;
-
-// Global variables
-var field;			// Array containing mines and cells values
-var open_cells;			// Array containing open cells boolean flags
-var marked_cells;		// Array containing cell markers
-
-var open_cells_number;		// Open cells counter
-var marked_mines_number;	// Mine-marked cells number
-var just_opened_cells;	// List of just opened cells
-
-var rows_number;		// Field rows number
-var cols_number;		// Field columns number
-var mine_number;		// Field mines number
-var timeouts = [];		// Timeout container			
-
-var options_opened = true;
-var preloaded_images = new Array();
-
-var images = ['imgs/mineblaster_icon.svg', 'imgs/wrong_mine.svg', 'imgs/menu.svg', 'imgs/mine.svg'];
-var background_colors = ['#930', '#390', '#039', '#9a0', '#399', '#939', '#e50', '#999'];	// Background possible colors
-var current_background = '';
 
 
 
-// Game initialization
+var mineblaster = new Object();
+
+// enable vibration support
+mineblaster.vibration = true;
+
+
+
+// Field initialization
 // ---------------------------------------------------------------------
-function initialize()
+mineblaster.initialize = function()
 {
-	// Empty arrays
-	field = new Array();
-	open_cells = new Array();
-	marked_cells = new Array();
-	
-	// Remove end message, if present
-	$("#message_box").fadeOut();
+	mineblaster.field.initialize();
 
-	for (i = 0; i < timeouts.length; i++)
-	{
-		clearTimeout(timeouts[i]);
-	}
-	
-	timeouts = [];
-
-	// Empty counters
-	open_cells_number = 0;
-
-	// Get highest row and column value
-	max_rows_number = $('#rows_number').attr("max");
-	max_cols_number = $('#cols_number').attr("max");
-
-	// Get and check all field parameters
-	rows_number = parseInt($("#rows_number").val());
-	cols_number = parseInt($("#cols_number").val());
-	mine_number = parseInt($("#mine_number").val());
-
-	if (rows_number < 1 || rows_number > max_rows_number)
-	{
-		message("Max rows number is " + max_rows_number + "!", 300);
-		$('#rows_number').val(max_rows_number);
-		return false;
-	}
-	
-	if (cols_number < 1 || cols_number > max_cols_number)
-	{
-		message("Max columns number is " + max_cols_number + "!", 300);
-		$('#cols_number').val(max_cols_number);
-		return false;
-	}
-
-	if (mine_number <= 0)
-	{
-		message("Put at least one mine in the field!", 300);
-		return false;
-	}
-
-	if (mine_number > (rows_number * cols_number) - 1)
-	{
-		var max_mines = (rows_number * cols_number) - 1;
-		message("Mines saturate field!<br />Please decrease number of mines to a maximum of " + max_mines, 300);
-		return false;
-	}
-
-	// Field disposition
-	generate_field();
-	plant_mines();
-	calculate_cells_values();
-	draw_field();
-	update_indicators();
-
-	// Unbind all previously associated cells listeners
-	$(".cell").unbind();
-
-	// Associate new events to cells
-	$(".cell").click(cell_click);				// Cell opening listener
-	$(".cell").dblclick(open_surrounding_cells);		// Surrounding cells opening listener
-	$(".cell").mousedown(right_mouse_button);			// Cell marking listener
-	$("#field").bind("contextmenu", function (e) {		// Avoid cells contextual menu on right mouse button click
-		e.preventDefault();
-	});
-}
-
-
-
-function preload_images()
-{
-	var i;
-	
-	for (i = 0; i < images.length; i++)
-	{
-		preloaded_images[i] = new Image();
-		preloaded_images[i].src = images[i];
-	}
-}
-
-
-
-// Show message
-// ---------------------------------------------------------------------
-function message(msg, timing, new_game_bt)
-{
-	if (new_game_bt === undefined)
-	{
-		new_game_bt = false;
-	}
-	
-	$('#msg_new_game').unbind('click');
-
-	var msg_box = $('#message_box');
-	var msg_div = $('<div id="message_text">' + msg + '</div>');
-	
-	msg_box.html(msg_div);
-	
-	if (new_game_bt)
-	{
-		$('#message_text').append('<input type="button" id="msg_new_game" value="New Game">');
-		$('#msg_new_game').click(initialize);
-	}
-	
-	msg_box.css({visibility: 'hidden'});
-	msg_box.show();
-
-	center_message();
-	
-	msg_box.hide();
-	msg_box.css({visibility: 'visible'});
-	
-	
-	msg_box.fadeIn(timing);
-}
-
-
-
-// Center message vertically
-// ---------------------------------------------------------------------
-function center_message()
-{
-	var msg_y = ($('#message_box').outerHeight() - $('#message_text').outerHeight()) / 2;
-	$('#message_text').css({top: msg_y + 'px'});
-}
-
-
-
-// READY
-// ---------------------------------------------------------------------
-$(document).ready( function () {
-
-	// Preload images
-	preload_images();
-	
 	// Regeneration button listener
-	$("#regenerate").mouseup(initialize);
+	$("#regenerate").mouseup(mineblaster.field.initialize);
+
+	// Message fadeout on click
+	$('#message_box').click(function () { $(this).fadeOut(); });
 	
-	$('#message_box').click( function () { $(this).fadeOut(); });
-	
-	// When page is opened, initialize field with default values
-	initialize();
-	
-	$(window).resize(resize_field);
+	// Resize field on resize window
+	$(window).resize(mineblaster.field.resize);
 
 	// Toggle options and set option button listener
-	$('#options').click(toggle_options);
-	$('#controls_box, #message_box').click(function(event){
+	$('#options').click(mineblaster.gui.menu.toggle);
+	$('#controls_box, #message_box').click(function(event) {
 		event.stopPropagation();
 	});
-	$(document).click(close_options);
+	$(document).click(mineblaster.gui.menu.close);
 	
 	$('#vibration').change(function () {
 		
@@ -219,5 +63,56 @@ $(document).ready( function () {
 		}
 		
 	});
+
+}
+
+
+
+// End of game procedures
+// ---------------------------------------------------------------------
+mineblaster.game_over = function ()
+{
+	var i, j;
+
+	// Game over, remove all cells listeners
+	$(".cell").unbind();
+
+	// Show all mines position except the exploded one
+	for (i = 0; i < mineblaster.field.rows_number; i++)
+	{
+		for (j = 0; j < mineblaster.field.cols_number; j++)
+		{
+			// Show wrong marked mine
+			if (mineblaster.field.marked_cells[i][j] == "M" && mineblaster.field.field[i][j] != "*")
+			{
+				$("#row" + i + "col" + j + " .front").html('').addClass("wrong_mine");
+			}
+
+			// Show non-marked mines
+			if (mineblaster.field.field[i][j] == "*" && mineblaster.field.open_cells[i][j] == 0)
+			{
+				$("#row" + i + "col" + j + " .front").html('').addClass("demined");
+			}
+		}
+	}
+	
+	mineblaster.field.flip_open_cells();
+}
+
+
+
+
+
+
+
+// READY
+// ---------------------------------------------------------------------
+$(document).ready( function () {
+
+	// Preload images
+	mineblaster.gui.preload_images();
+
+	// When page is opened, initialize field with default values
+	mineblaster.initialize();
 
 });
