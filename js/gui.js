@@ -1,10 +1,6 @@
 mineblaster.gui = new Object();
 
-mineblaster.gui.images = ['imgs/mineblaster_icon.svg', 'imgs/wrong_mine.svg', 'imgs/menu.svg', 'imgs/mine.svg'];
 mineblaster.gui.preloaded_images = new Array();
-
-//Background color
-mineblaster.gui.background_colors = ['#930', '#390', '#039', '#9a0', '#399', '#939', '#e50', '#999'];	// Background possible colors
 mineblaster.gui.current_background = '';
 
 
@@ -52,10 +48,10 @@ mineblaster.gui.preload_images = function ()
 {
 	var i;
 	
-	for (i = 0; i < mineblaster.gui.images.length; i++)
+	for (i = 0; i < mineblaster.images.length; i++)
 	{
 		mineblaster.gui.preloaded_images[i] = new Image();
-		mineblaster.gui.preloaded_images[i].src = mineblaster.gui.images[i];
+		mineblaster.gui.preloaded_images[i].src = mineblaster.images[i];
 	}
 }
 
@@ -67,7 +63,7 @@ mineblaster.gui.change_background = function (callback)
 {
 	do
 	{
-		random = Math.floor(Math.random() * mineblaster.gui.background_colors.length);
+		random = Math.floor(Math.random() * mineblaster.background_colors.length);
 	}
 	while (random == mineblaster.gui.current_background);
 
@@ -75,7 +71,7 @@ mineblaster.gui.change_background = function (callback)
 
 	// Background color animation
 	$('body, #controls_box').stop().animate({
-		'background-color' : mineblaster.gui.background_colors[random]
+		'background-color' : mineblaster.background_colors[random]
 	}, callback);
 
 }

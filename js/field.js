@@ -35,14 +35,10 @@ mineblaster.field.initialize = function ()
 	// Empty counters
 	mineblaster.field.open_cells_number = 0;
 
-	// Get highest row and column value
-	var max_rows_number = $('#rows_number').attr("max");
-	var max_cols_number = $('#cols_number').attr("max");
-
 	// Parameters check
 	if (! mineblaster.field.check_parameters())
 	{
-		return;
+		return false;
 	};
 	
 	// Close options, if open
@@ -59,8 +55,12 @@ mineblaster.field.initialize = function ()
 
 // Parameters check
 // ---------------------------------------------------------------------
-mineblaster.check_parameters = new function ()
+mineblaster.field.check_parameters = function ()
 {
+	// Get highest row and column value
+	var max_rows_number = $('#rows_number').attr("max");
+	var max_cols_number = $('#cols_number').attr("max");
+
 	// Get and check all field parameters
 	mineblaster.field.rows_number = parseInt($("#rows_number").val());
 	mineblaster.field.cols_number = parseInt($("#cols_number").val());
@@ -131,63 +131,6 @@ mineblaster.field.rebuild = function ()
 
 
 
-// Right mouse click listener, for cell marking capability
-// ---------------------------------------------------------------------
-mineblaster.field.right_mouse_button = function(e)
-{
-	var id;
-	var row, column;
-
-	// 3 is right mouse button value
-	if (e.which === 3)
-	{
-		// Get pressed cell row and column number
-		id = $(this).attr("id");
-
-		row = parseInt(id.substring(3, id.indexOf("col")));
-		column = parseInt(id.substring(id.indexOf("col") + 3));
-
-		// If cell is already open, do nothing
-		if (mineblaster.field.open_cells[row][column] == 1)
-		{
-			return false;
-		}
-
-		// Jump between cell possible states
-		if (mineblaster.field.marked_cells[row][column] == "") mineblaster.field.marked_cells[row][column] = "M";
-		else if (mineblaster.field.marked_cells[row][column] == "M") mineblaster.field.marked_cells[row][column] = "?";
-		else if (mineblaster.field.marked_cells[row][column] == "?") mineblaster.field.marked_cells[row][column] = "";
-		
-		// Vibrate on mobile devices
-		if (navigator.vibrate && mineblaster.vibration)
-		{
-			navigator.vibrate(30);
-		}
-
-
-
-		// Write value into displayed cell
-		$("#row" + row + "col" + column + " .front").html(mineblaster.field.marked_cells[row][column]);
-
-		// If cell assumes mied state, remove opening cell listener
-		if (mineblaster.field.marked_cells[row][column] == "M")
-		{
-			$("#row" + row + "col" + column).unbind("click");
-		}
-
-		// If cell is de-marked, reapply click-to-open listener
-		if (mineblaster.field.marked_cells[row][column] == "")
-		{
-			$("#row" + row + "col" + column).click(mineblaster.field.cell_click);
-		}
-
-		// Update visual indicators
-		mineblaster.gui.update_indicators();
-	}
-}
-
-
-
 // Field data arrays initialization
 // ---------------------------------------------------------------------
 mineblaster.field.generate = function ()
@@ -216,107 +159,27 @@ mineblaster.field.generate = function ()
 
 
 
-// Field drawing procedure
+// Mine positioning
 // ---------------------------------------------------------------------
-mineblaster.field.draw = function ()
+mineblaster.field.plant_mines = function ()
 {
-	var i, j; // Counters
-	var field = $('#field'); // Field HTML element
-	var field_string = ''; // Empty HTML field string
+	var i;
+	var random_row, random_column;
 
-	// Empty field
-	field.html('');
-
-	var field_str = "";
-	
-	// Row by row
-	for (i = 0; i < mineblaster.field.rows_number; i++)
+	// Distribute required mines number
+	for (i = 0; i < mineblaster.field.mine_number; i++)
 	{
-		// Column by column
-		for (j = 0; j < mineblaster.field.cols_number; j++)
+		// Search for a random non-mined cell
+		do
 		{
-			var cell_id = 'row' + i + 'col' + j;
-			field_str += '<div class="cell" id="' + cell_id + '"><div class="front"></div><div class="back"></div></div>';
+			random_row = Math.floor(Math.random() * mineblaster.field.rows_number);
+			random_column = Math.floor(Math.random() * mineblaster.field.cols_number);
 		}
+		while (mineblaster.field.field[random_row][random_column] == "*");
+
+		// Found a free cell, flag it as mined
+		mineblaster.field.field[random_row][random_column] = "*";
 	}
-
-	// Insert HTML field string into field HTML element
-	field.append(field_str);
-
-	// Resize field to fit window width/height
-	mineblaster.field.resize();
-}
-
-
-
-// Resize field cells to fit window size
-// ---------------------------------------------------------------------
-mineblaster.field.resize = function ()
-{
-	var i, j;
-	
-	// Disable transition effect for cells
-	$(".cell").addClass("no_transition");
-
-	// Set field size
-	var window_w = $(window).outerWidth();
-	var window_h = $(window).outerHeight() - $('#indicators').outerHeight() - 10;
-
-	var cell_w = window_w / mineblaster.field.cols_number;
-	var cell_h = window_h / mineblaster.field.rows_number;
-	cell_h = cell_w = Math.min(cell_w, cell_h);
-
-	// Minimum width
-	if (cell_w < 30)
-	{
-		cell_w = cell_h = 30;
-	}
-
-	// Only integer cell sizes, due to firefox collapsing some adjacent borders
-	// when using decimal sizes
-	cell_w = Math.floor(cell_w);
-	cell_h = Math.floor(cell_h);
-
-	$("div.cell").width(cell_w);
-	$("div.cell").height(cell_h);
-
-	var field_w = (cell_w * mineblaster.field.cols_number);
-	var field_h = cell_h * mineblaster.field.rows_number;
-
-	$('#field').width(field_w);
-	$('#field').height(field_h);
-
-	font_size = cell_w / 2.5;
-	pad_top = cell_w / 4;
-
-	// Trick to vertically center numbers
-	$(".cell .front, .cell .back").css({
-		fontSize : font_size + 'px',
-		paddingTop : pad_top + 'px'
-	});
-
-	// Center field horizontally
-	var offset_x = ($(window).outerWidth() - $('#field').outerWidth()) / 2;
-	$('#field').css({
-		'left' : offset_x + 'px'
-	});
-
-	// Center field vertically
-	var controls_height = $('#indicators').outerHeight();
-	var field_y = (($(window).outerHeight() - controls_height - $('#field').outerHeight()) / 2);
-	
-	if (field_y < 0) field_y = 0;
-	
-	var offset_y = controls_height + field_y;
-	$('#field').css({
-		'top' : offset_y + 'px'
-	});
-	
-	// Re-enable transition effect for cells
-	$(".cell").removeClass("no_transition");
-
-	// Centers message, if open
-	mineblaster.gui.message.center();
 }
 
 
@@ -371,35 +234,41 @@ mineblaster.field.calculate_cells_values = function ()
 
 
 
-// Mine positioning
+// Field drawing procedure
 // ---------------------------------------------------------------------
-mineblaster.field.plant_mines = function ()
+mineblaster.field.draw = function ()
 {
-	var i;
-	var random_row, random_column;
+	var i, j; // Counters
+	var field = $('#field'); // Field HTML element
+	var field_string = ''; // Empty HTML field string
 
-	// Distribute required mines number
-	for (i = 0; i < mineblaster.field.mine_number; i++)
+	// Empty field
+	field.html('');
+
+	var field_str = "";
+	
+	// Row by row
+	for (i = 0; i < mineblaster.field.rows_number; i++)
 	{
-		// Search for a random non-mined cell
-		do
+		// Column by column
+		for (j = 0; j < mineblaster.field.cols_number; j++)
 		{
-			random_row = Math.floor(Math.random() * mineblaster.field.rows_number);
-			random_column = Math.floor(Math.random() * mineblaster.field.cols_number);
+			var cell_id = 'row' + i + 'col' + j;
+			field_str += '<div class="cell" id="' + cell_id + '"><div class="front"></div><div class="back"></div></div>';
 		}
-		while (mineblaster.field.field[random_row][random_column] == "*");
-
-		// Found a free cell, flag it as mined
-		mineblaster.field.field[random_row][random_column] = "*";
 	}
+
+	// Insert HTML field string into field HTML element
+	field.append(field_str);
+
+	// Resize field to fit window width/height
+	mineblaster.field.resize();
 }
 
 
 
-
-
-//Cell click listener callback
-//---------------------------------------------------------------------
+// Cell click listener callback
+// ---------------------------------------------------------------------
 mineblaster.field.cell_click = function (e)
 {
 	var id;
@@ -417,8 +286,8 @@ mineblaster.field.cell_click = function (e)
 
 
 
-//Cell opening procedure
-//---------------------------------------------------------------------
+// Cell opening procedure
+// ---------------------------------------------------------------------
 mineblaster.field.open_cell = function (row, column, stack_level)
 {
 	var i, j;
@@ -499,8 +368,9 @@ mineblaster.field.open_cell = function (row, column, stack_level)
 }
 
 
-//Perpetrate cell opening
-//---------------------------------------------------------------------
+
+// Perpetrate cell opening
+// ---------------------------------------------------------------------
 mineblaster.field.flip_open_cells = function ()
 {
 	var i, j, delay;
@@ -534,9 +404,9 @@ mineblaster.field.flip_open_cells = function ()
 
 
 
-//If double click on opened cell, if it has a satisfied mine number,
-//open all surrounding cells, except for mine-flagged ones
-//---------------------------------------------------------------------
+// If double click on opened cell, if it has a satisfied mine number,
+// open all surrounding cells, except for mine-flagged ones
+// ---------------------------------------------------------------------
 mineblaster.field.open_surrounding_cells = function open_surrounding_cells()
 {
 	var i, j, marked_mines_number;
@@ -602,4 +472,133 @@ mineblaster.field.open_surrounding_cells = function open_surrounding_cells()
 	}
 	
 	mineblaster.field.flip_open_cells();
+}
+
+
+
+// Right mouse click listener, for cell marking capability
+// ---------------------------------------------------------------------
+mineblaster.field.right_mouse_button = function(e)
+{
+	var id;
+	var row, column;
+
+	// 3 is right mouse button value
+	if (e.which === 3)
+	{
+		// Get pressed cell row and column number
+		id = $(this).attr("id");
+
+		row = parseInt(id.substring(3, id.indexOf("col")));
+		column = parseInt(id.substring(id.indexOf("col") + 3));
+
+		// If cell is already open, do nothing
+		if (mineblaster.field.open_cells[row][column] == 1)
+		{
+			return false;
+		}
+
+		// Jump between cell possible states
+		if (mineblaster.field.marked_cells[row][column] == "") mineblaster.field.marked_cells[row][column] = "M";
+		else if (mineblaster.field.marked_cells[row][column] == "M") mineblaster.field.marked_cells[row][column] = "?";
+		else if (mineblaster.field.marked_cells[row][column] == "?") mineblaster.field.marked_cells[row][column] = "";
+		
+		// Vibrate on mobile devices
+		if (navigator.vibrate && mineblaster.vibration)
+		{
+			navigator.vibrate(30);
+		}
+
+
+
+		// Write value into displayed cell
+		$("#row" + row + "col" + column + " .front").html(mineblaster.field.marked_cells[row][column]);
+
+		// If cell assumes mied state, remove opening cell listener
+		if (mineblaster.field.marked_cells[row][column] == "M")
+		{
+			$("#row" + row + "col" + column).unbind("click");
+		}
+
+		// If cell is de-marked, reapply click-to-open listener
+		if (mineblaster.field.marked_cells[row][column] == "")
+		{
+			$("#row" + row + "col" + column).click(mineblaster.field.cell_click);
+		}
+
+		// Update visual indicators
+		mineblaster.gui.update_indicators();
+	}
+}
+
+
+
+// Resize field cells to fit window size
+// ---------------------------------------------------------------------
+mineblaster.field.resize = function ()
+{
+	var i, j;
+	
+	// Disable transition effect for cells
+	$(".cell").addClass("no_transition");
+
+	// Set field size
+	var window_w = $(window).outerWidth();
+	var window_h = $(window).outerHeight() - $('#indicators').outerHeight() - 10;
+
+	var cell_w = window_w / mineblaster.field.cols_number;
+	var cell_h = window_h / mineblaster.field.rows_number;
+	cell_h = cell_w = Math.min(cell_w, cell_h);
+
+	// Minimum width
+	if (cell_w < 30)
+	{
+		cell_w = cell_h = 30;
+	}
+
+	// Only integer cell sizes, due to firefox collapsing some adjacent borders
+	// when using decimal sizes
+	cell_w = Math.floor(cell_w);
+	cell_h = Math.floor(cell_h);
+
+	$("div.cell").width(cell_w);
+	$("div.cell").height(cell_h);
+
+	var field_w = (cell_w * mineblaster.field.cols_number);
+	var field_h = cell_h * mineblaster.field.rows_number;
+
+	$('#field').width(field_w);
+	$('#field').height(field_h);
+
+	font_size = cell_w / 2.5;
+	pad_top = cell_w / 4;
+
+	// Trick to vertically center numbers
+	$(".cell .front, .cell .back").css({
+		fontSize : font_size + 'px',
+		paddingTop : pad_top + 'px'
+	});
+
+	// Center field horizontally
+	var offset_x = ($(window).outerWidth() - $('#field').outerWidth()) / 2;
+	$('#field').css({
+		'left' : offset_x + 'px'
+	});
+
+	// Center field vertically
+	var controls_height = $('#indicators').outerHeight();
+	var field_y = (($(window).outerHeight() - controls_height - $('#field').outerHeight()) / 2);
+	
+	if (field_y < 0) field_y = 0;
+	
+	var offset_y = controls_height + field_y;
+	$('#field').css({
+		'top' : offset_y + 'px'
+	});
+	
+	// Re-enable transition effect for cells
+	$(".cell").removeClass("no_transition");
+
+	// Centers message, if open
+	mineblaster.gui.message.center();
 }
