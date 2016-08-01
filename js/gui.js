@@ -32,7 +32,7 @@ mineblaster.gui.initialize = function ()
 		}
 		
 		// Set cookie
-		mineblaster.setcookie('vibration', mineblaster.vibration);
+		mineblaster.cookies.set('vibration', mineblaster.vibration);
 		
 	});
 

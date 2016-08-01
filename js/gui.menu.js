@@ -3,6 +3,7 @@ mineblaster.gui.menu = new Object();
 mineblaster.gui.menu.opened = true;
 
 
+
 // Open options menu
 // --------------------------------------------------------
 mineblaster.gui.menu.open = function ()
@@ -24,6 +25,7 @@ mineblaster.gui.menu.close = function ()
 
 	mineblaster.gui.menu.opened = false;
 }
+
 
 
 // Toggle options menu

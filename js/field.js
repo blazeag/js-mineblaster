@@ -16,26 +16,15 @@ mineblaster.field.timeouts = [];		// Timeout container
 
 
 
-mineblaster.field.initialize = function ()
-{
-	// Change background color
-	mineblaster.gui.change_background(mineblaster.field.rebuild);
-}
-
-
-
-// Rebuild field
+// Field initialization
 // ---------------------------------------------------------------------
-mineblaster.field.rebuild = function ()
+mineblaster.field.initialize = function ()
 {
 	// Empty arrays
 	mineblaster.field.field = new Array();
 	mineblaster.field.open_cells = new Array();
 	mineblaster.field.marked_cells = new Array();
 	
-	// Remove end message, if present
-	$("#message_box").fadeOut();
-
 	for (i = 0; i < mineblaster.field.timeouts.length; i++)
 	{
 		clearTimeout(mineblaster.field.timeouts[i]);
@@ -50,11 +39,34 @@ mineblaster.field.rebuild = function ()
 	var max_rows_number = $('#rows_number').attr("max");
 	var max_cols_number = $('#cols_number').attr("max");
 
+	// Parameters check
+	if (! mineblaster.field.check_parameters())
+	{
+		return;
+	};
+	
+	// Close options, if open
+	mineblaster.gui.menu.close();
+
+	// Remove end message, if present
+	$("#message_box").fadeOut();
+
+	// Change background color and then call field rebuilding
+	mineblaster.gui.change_background(mineblaster.field.rebuild);
+}
+
+
+
+// Parameters check
+// ---------------------------------------------------------------------
+mineblaster.check_parameters = new function ()
+{
 	// Get and check all field parameters
 	mineblaster.field.rows_number = parseInt($("#rows_number").val());
 	mineblaster.field.cols_number = parseInt($("#cols_number").val());
 	mineblaster.field.mine_number = parseInt($("#mine_number").val());
 
+	// Parameters check
 	if (mineblaster.field.rows_number < 1 || mineblaster.field.rows_number > max_rows_number)
 	{
 		mineblaster.gui.message.show("Max rows number is " + max_rows_number + "!", 300);
@@ -83,10 +95,19 @@ mineblaster.field.rebuild = function ()
 	}
 	
 	// Set cookies
-	mineblaster.setcookie('rows_number', mineblaster.field.rows_number);
-	mineblaster.setcookie('cols_number', mineblaster.field.cols_number);
-	mineblaster.setcookie('mine_number', mineblaster.field.mine_number);
+	mineblaster.cookies.set('rows_number', mineblaster.field.rows_number);
+	mineblaster.cookies.set('cols_number', mineblaster.field.cols_number);
+	mineblaster.cookies.set('mine_number', mineblaster.field.mine_number);
+	
+	return true;
+}
 
+
+
+// Rebuild field
+// ---------------------------------------------------------------------
+mineblaster.field.rebuild = function ()
+{
 	// Field disposition
 	mineblaster.field.generate();
 	mineblaster.field.plant_mines();
@@ -191,9 +212,6 @@ mineblaster.field.generate = function ()
 			mineblaster.field.open_cells[i][j] = 0;
 		}
 	}
-	
-	// Close options
-	mineblaster.gui.menu.close();
 }
 
 
@@ -284,7 +302,7 @@ mineblaster.field.resize = function ()
 	});
 
 	// Center field vertically
-	var controls_height = $('#indicators').outerHeight() + 10;
+	var controls_height = $('#indicators').outerHeight();
 	var field_y = (($(window).outerHeight() - controls_height - $('#field').outerHeight()) / 2);
 	
 	if (field_y < 0) field_y = 0;
