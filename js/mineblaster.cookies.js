@@ -10,6 +10,7 @@ mineblaster.cookies.load = function ()
 	var ca;
 	
 	mineblaster.vibration = true;
+	mineblaster.animations = true;
 	mineblaster.field.rows_number = 10;
 	mineblaster.field.cols_number = 10;
 	mineblaster.field.mine_number = 10;
@@ -44,6 +45,11 @@ mineblaster.cookies.load = function ()
         {
         	mineblaster.vibration = (c.substring(10, c.length) === 'true') ? true : false;
         }
+        
+        if (c.indexOf("animations") == 0)
+        {
+        	mineblaster.animations = (c.substring(10, c.length) === 'true') ? true : false;
+        }
     }
     
     
@@ -52,6 +58,7 @@ mineblaster.cookies.load = function ()
 	$('#cols_number').val(mineblaster.field.cols_number);
 	$('#mine_number').val(mineblaster.field.mine_number);
 	$('#vibration').prop('checked', mineblaster.vibration);
+	$('#animations').prop('checked', mineblaster.animations);
 	
 	//document.cookie = "username=John Doe; expires=Thu, 18 Dec 2013 12:00:00 UTC; path=/";
 }

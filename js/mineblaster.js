@@ -26,6 +26,8 @@ var mineblaster = new Object();
 
 // enable vibration support
 mineblaster.vibration;
+mineblaster.animations;
+
 mineblaster.background_colors = ['#930', '#390', '#039', '#9a0', '#399', '#939', '#e50', '#999'];	// Background possible colors
 mineblaster.images = ['imgs/mineblaster_icon.svg', 'imgs/wrong_mine.svg', 'imgs/menu.svg', 'imgs/mine.svg'];
 

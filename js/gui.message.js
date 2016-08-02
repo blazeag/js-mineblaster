@@ -32,8 +32,33 @@ mineblaster.gui.message.show = function (msg, timing, new_game_bt)
 	
 	msg_box.hide();
 	msg_box.css({visibility: 'visible'});
-	
-	msg_box.fadeIn(timing);
+
+	if (mineblaster.animations)
+	{
+		msg_box.fadeIn(timing);
+	}
+	else
+	{
+		msg_box.show();
+	}
+}
+
+
+
+// Hide message box
+// ---------------------------------------------------------------------
+mineblaster.gui.message.hide = function ()
+{
+	// Remove end message, if present
+	if (mineblaster.animations)
+	{
+		$("#message_box").fadeOut();
+	}
+	else
+	{
+		$("#message_box").hide();
+	}
+
 }
 
 

@@ -32,6 +32,23 @@ mineblaster.gui.initialize = function ()
 		
 	});
 
+	$('#animations').change(function () {
+		
+		if ($(this).is(':checked'))
+		{
+			mineblaster.animations = true;
+		}
+		else
+		{
+			mineblaster.animations = false;
+		}
+		
+		// Set cookie
+		mineblaster.cookies.set('vibration', mineblaster.vibration);
+		mineblaster.cookies.set('animations', mineblaster.animations);
+		
+	});
+
 	// Regeneration button listener
 	$("#regenerate").mouseup(mineblaster.field.initialize);
 
@@ -70,9 +87,18 @@ mineblaster.gui.change_background = function (callback)
 	mineblaster.gui.current_background = random;
 
 	// Background color animation
-	$('body, #controls_box').stop().animate({
-		'background-color' : mineblaster.background_colors[random]
-	}, callback);
+	
+	if (mineblaster.animations)
+	{
+		$('body, #controls_box').stop().animate({
+			'background-color' : mineblaster.background_colors[random]
+		}, callback);
+	}
+	else
+	{
+		$('body, #controls_box').css({'background-color': mineblaster.background_colors[random]});
+		callback();
+	}
 
 }
 

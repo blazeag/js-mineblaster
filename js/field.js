@@ -40,10 +40,9 @@ mineblaster.field.initialize = function ()
 	{
 		return false;
 	};
-	
-	// Remove end message, if present
-	$("#message_box").fadeOut();
 
+	mineblaster.gui.message.hide();
+	
 	// Change background color and then call field rebuilding
 	mineblaster.gui.change_background(mineblaster.field.rebuild);
 
@@ -387,11 +386,31 @@ mineblaster.field.flip_open_cells = function ()
 		var row = mineblaster.field.just_opened_cells[i][0];
 		var column = mineblaster.field.just_opened_cells[i][1];
 		
+		// Enable / disable animations
+		if (mineblaster.animations)
+		{
+			$(".cell").removeClass("no_transition");
+		}
+		else
+		{
+			$(".cell").addClass("no_transition");
+		}
+		
 		if (mineblaster.field.open_cells[row][column] == 1)
 		{
 			func = "$('#row" + row + "col" + column + "').addClass('open_cell');";
 
-			mineblaster.field.timeouts.push(setTimeout(func, 20 + delay));
+			// If animations are enabled, queue them
+			if (mineblaster.animations)
+			{
+				mineblaster.field.timeouts.push(setTimeout(func, 20 + delay));
+			}
+			
+			// If animations are disabled, don't start them
+			else
+			{
+				$('#row' + row + 'col' + column).addClass('open_cell');
+			}
 			
 			// 10ms delay between cells opening
 			delay += 20;

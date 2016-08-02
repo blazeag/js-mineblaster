@@ -8,7 +8,14 @@ mineblaster.gui.menu.opened = true;
 // --------------------------------------------------------
 mineblaster.gui.menu.open = function ()
 {
-	$('#controls_box').animate({'top': '0px'});
+	if (mineblaster.animations)
+	{
+		$('#controls_box').animate({'top': '0px'});
+	}
+	else
+	{
+		$('#controls_box').css({'top': '0px'});
+	}
 	mineblaster.gui.menu.opened = true;
 }
 
@@ -21,7 +28,14 @@ mineblaster.gui.menu.close = function ()
 	var controls_h = $('#controls_box').outerHeight();
 	var indicators_h = $('#indicators').outerHeight();
 
-	$('#controls_box').animate({'top': "-" + (controls_h - indicators_h) + 'px'});
+	if (mineblaster.animations)
+	{
+		$('#controls_box').animate({'top': "-" + (controls_h - indicators_h) + 'px'});
+	}
+	else
+	{
+		$('#controls_box').css({'top': "-" + (controls_h - indicators_h) + 'px'});
+	}
 
 	mineblaster.gui.menu.opened = false;
 }
