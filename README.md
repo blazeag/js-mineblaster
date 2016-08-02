@@ -12,5 +12,10 @@ A simple javascript / jQuery based Minesweeper clone. [Demo here](http://minebla
 
 ### Todo list
 
+* [x] Flip animation when opening cells
+* [x] Mobile devices optimization
+* [x] Vibration feedback on mobile devices
+* [x] Fullscreen when installed on dashboard
+* [x] Store settings into cookies
+* [x] Enable/Disable animations button
 * [ ] Auto-place menu on the shortest side
-* [ ] Enable/Disable animations button
