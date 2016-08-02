@@ -9,6 +9,14 @@ mineblaster.gui.current_background = '';
 // --------------------------------------------------------
 mineblaster.gui.initialize = function ()
 {
+	// Preload images
+	mineblaster.gui.preload_images();
+
+	if (mineblaster.animations)
+	{
+		$('#field').addClass('animated');
+	}
+	
 	// Toggle options and set option button listener
 	$('#options').click(mineblaster.gui.menu.toggle);
 	$('#controls_box, #message_box').click(function(event) {
@@ -37,10 +45,12 @@ mineblaster.gui.initialize = function ()
 		if ($(this).is(':checked'))
 		{
 			mineblaster.animations = true;
+			$('#field').addClass('animated');
 		}
 		else
 		{
 			mineblaster.animations = false;
+			$('#field').removeClass('animated');
 		}
 		
 		// Set cookie
