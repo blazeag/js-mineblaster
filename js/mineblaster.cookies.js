@@ -48,7 +48,7 @@ mineblaster.cookies.load = function ()
         
         if (c.indexOf("animations") == 0)
         {
-        	mineblaster.animations = (c.substring(10, c.length) === 'true') ? true : false;
+        	mineblaster.animations = (c.substring(11, c.length) === 'true') ? true : false;
         }
     }
     
