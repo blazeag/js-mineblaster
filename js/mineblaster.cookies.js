@@ -17,35 +17,45 @@ mineblaster.cookies.load = function ()
 	
 	ca = document.cookie.split(';');
 	
+	// Parse cookies and get settings
 	for (i = 0; i < ca.length; i++)
 	{
 		var c = ca[i];
 	
+		// Remove all leading spaces
 		while (c.charAt(0) == ' ')
 		{
 			c = c.substring(1);
 		}
 	
+		// Cookies
+		// ---------------
+	
+		// Rows number
 		if (c.indexOf('rows_number') == 0)
 		{
 			mineblaster.field.rows_number = c.substring(12, c.length);
 		}
 		
+		// Columns number
 		if (c.indexOf("cols_number") == 0)
 		{
 			mineblaster.field.cols_number = c.substring(12, c.length);
 		}
 		
+		// Mines number
 		if (c.indexOf("mine_number") == 0)
 		{
 			mineblaster.field.mine_number = c.substring(12, c.length);
 		}
 		
+		// Vibration flag
 		if (c.indexOf("vibration") == 0)
 		{
 			mineblaster.vibration = (c.substring(10, c.length) === 'true') ? true : false;
 		}
 		
+		// Animations flag
 		if (c.indexOf("animations") == 0)
 		{
 			mineblaster.animations = (c.substring(11, c.length) === 'true') ? true : false;
@@ -53,7 +63,7 @@ mineblaster.cookies.load = function ()
 	}
 	
 	
-	// Set values in parameters textfields
+	// Copy values in parameters textfields
 	$('#rows_number').val(mineblaster.field.rows_number);
 	$('#cols_number').val(mineblaster.field.cols_number);
 	$('#mine_number').val(mineblaster.field.mine_number);
