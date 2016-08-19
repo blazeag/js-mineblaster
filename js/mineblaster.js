@@ -31,7 +31,7 @@ mineblaster.animations;
 mineblaster.background_colors = ['#930', '#390', '#039', '#9a0', '#399', '#939', '#e50', '#999'];	// Background possible colors
 mineblaster.images = ['imgs/mineblaster_icon.svg', 'imgs/wrong_mine.svg', 'imgs/menu.svg', 'imgs/mine.svg',
 'imgs/1.svg', 'imgs/2.svg', 'imgs/3.svg', 'imgs/4.svg', 'imgs/5.svg', 'imgs/6.svg', 'imgs/7.svg', 'imgs/8.svg',
-'mined/mined.svg', 'imgs/unknown.svg'];
+'imgs/mined.svg', 'imgs/unknown.svg'];
 
 
 
