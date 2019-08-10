@@ -1,33 +1,34 @@
 <!DOCTYPE HTML>
 
-<html lang="en"> 
+<html lang="en">
 
 <head>
 
 	<head>
-	
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
-	
+
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
 		<title>MineBlaster</title>
 
 		<link type="text/css" rel="stylesheet" href="css/mineblaster.css" />
 
 		<script type="text/javascript" src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
 		<script type="text/javascript" src="https://code.jquery.com/color/jquery.color-2.1.2.min.js"></script>
-		
+
+		<script type="text/javascript" src="js/classes/Mineblaster.js"></script>
+		<script type="text/javascript" src="js/classes/Settings.js"></script>
+		<script type="text/javascript" src="js/classes/GUI.js"></script>
+		<script type="text/javascript" src="js/classes/Menu.js"></script>
+		<script type="text/javascript" src="js/classes/Message.js"></script>
+		<script type="text/javascript" src="js/classes/Field.js"></script>
 		<script type="text/javascript" src="js/mineblaster.js"></script>
-		<script type="text/javascript" src="js/mineblaster.cookies.js"></script>
-		<script type="text/javascript" src="js/gui.js"></script>
-		<script type="text/javascript" src="js/gui.menu.js"></script>
-		<script type="text/javascript" src="js/gui.message.js"></script>
-		<script type="text/javascript" src="js/field.js"></script>
 
 
 		<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, minimum-scale=1, maximum-scale=1" />
 		<meta name="apple-mobile-web-app-capable" content="yes" />
 		<meta name="mobile-web-app-capable" content="yes" />
-		
-		<link rel="icon" href="imgs/mineblaster_icon.png" type="image/png" />	
+
+		<link rel="icon" href="imgs/mineblaster_icon.png" type="image/png" />
 
 	</head>
 
@@ -37,7 +38,7 @@
 		<!-- Controls container -->
 		<div id="controls_box">
 			<div id="controls">
-				
+
 				<!-- Field parameters container -->
 				<div id="parameters">
 					<span class="parameter"><span class="short">R</span><span class="long">Rows</span> <input type="number" id="rows_number" value="10" min="0" max="30" /></span>
@@ -50,21 +51,21 @@
 						</div>
 					<div><input id="regenerate" type="button" value="New Game" /></div>
 				</div>
-	
+
 				<!-- Visual game indicators container -->
 				<div id="indicators">
 					<span class="indicator">Cells left: <span id="remaining_cells"></span></span>
 					<span class="indicator">Mines left: <span id="remaining_mines"></span></span>
 					<span id="options"></span>
 				</div>
-	
+
 			</div>
 		</div>
 
 
 		<!-- Field container -->
 		<div id="field"></div>
-		
+
 
 
 		<!-- Messages container -->

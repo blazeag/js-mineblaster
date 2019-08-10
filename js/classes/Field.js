@@ -1,0 +1,599 @@
+class Field
+{
+
+	constructor(mineblaster, settings, gui)
+	{
+		this.mineblaster = mineblaster;
+		this.settings = settings;
+		this.gui = gui;
+		this.field = new Array();	// Array containing mines and cells values
+		this.open_cells = new Array();;			// Array containing open cells boolean flags
+		this.marked_cells = new Array();;		// Array containing cell markers
+
+		this.open_cells_number = 0;		// Open cells counter
+		this.marked_mines_number;	// Mine-marked cells number
+		this.just_opened_cells;	// List of just opened cells
+
+		this.rows_number;		// Field rows number
+		this.cols_number;		// Field columns number
+		this.mine_number;		// Field mines number
+		this.timeouts = [];		// Timeout container
+
+		for (var i = 0; i < this.timeouts.length; i++)
+		{
+			clearTimeout(this.timeouts[i]);
+		}
+
+		// Parameters check
+		if (! this.check_parameters())
+		{
+			return false;
+		};
+	}
+
+
+	// Field initialization
+	// ---------------------------------------------------------------------
+	initialize()
+	{
+		var self = this;
+
+		this.gui.message.hide();
+
+		// Change background color and then call field rebuilding
+		this.gui.change_background(function() { self.rebuild(self); });
+
+		// Close options, if open
+		this.gui.menu.close();
+	}
+
+
+
+	// Parameters check
+	// ---------------------------------------------------------------------
+	check_parameters()
+	{
+		// Get highest row and column value
+		var max_rows_number = $('#rows_number').attr("max");
+		var max_cols_number = $('#cols_number').attr("max");
+
+		// Get and check all field parameters
+		this.rows_number = parseInt($("#rows_number").val());
+		this.cols_number = parseInt($("#cols_number").val());
+		this.mine_number = parseInt($("#mine_number").val());
+
+		// Parameters check
+		if (this.rows_number < 1 || this.rows_number > max_rows_number)
+		{
+			this.gui.message.show("Max rows number is " + max_rows_number + "!", 300);
+			$('#rows_number').val(max_rows_number);
+			return false;
+		}
+
+		if (this.cols_number < 1 || this.cols_number > max_cols_number)
+		{
+			this.message.show("Max columns number is " + max_cols_number + "!", 300);
+			$('#cols_number').val(max_cols_number);
+			return false;
+		}
+
+		if (this.mine_number <= 0)
+		{
+			message("Put at least one mine in the field!", 300);
+			return false;
+		}
+
+		if (this.mine_number > (this.rows_number * this.cols_number) - 1)
+		{
+			var max_mines = (this.rows_number * this.cols_number) - 1;
+			this.gui.message.show("Mines saturate field!<br />Please decrease number of mines to a maximum of " + max_mines, 300);
+			return false;
+		}
+
+		// Set cookies
+		this.settings.save_to_cookie('rows_number', this.rows_number);
+		this.settings.save_to_cookie('cols_number', this.cols_number);
+		this.settings.save_to_cookie('mine_number', this.mine_number);
+
+		return true;
+	}
+
+
+
+	// Rebuild field
+	// ---------------------------------------------------------------------
+	rebuild(self)
+	{
+		// Field disposition
+		self.generate();
+		self.plant_mines();
+		self.calculate_cells_values();
+		self.draw();
+
+		self.gui.update_indicators(self);
+
+		// Unbind all previously associated cells listeners
+		$(".cell").unbind();
+
+		// Associate new events to cells
+		$(".cell").click(function(e) { self.cell_click(e, self); });				// Cell opening listener
+		$(".cell").dblclick(function(e) { self.open_surrounding_cells(e, self) });		// Surrounding cells opening listener
+		$(".cell").mousedown(function(e) { self.right_mouse_button(e, self); });			// Cell marking listener
+		$("#field").bind("contextmenu", function (e) {		// Avoid cells contextual menu on right mouse button click
+			e.preventDefault();
+		});
+
+	}
+
+
+
+	// Field data arrays initialization
+	// ---------------------------------------------------------------------
+	generate()
+	{
+		var i, j;
+		var random;
+
+		this.just_opened_cells = [];
+
+		// Draw field row by row
+		for (i = 0; i < this.rows_number; i++)
+		{
+			this.field[i] = new Array();
+			this.open_cells[i] = new Array();
+			this.marked_cells[i] = new Array();
+
+			// Column by column
+			for (j = 0; j < this.cols_number; j++)
+			{
+				this.field[i][j] = "";
+				this.marked_cells[i][j] = "";
+				this.open_cells[i][j] = 0;
+			}
+		}
+	}
+
+
+
+	// Mine positioning
+	// ---------------------------------------------------------------------
+	plant_mines()
+	{
+		var i;
+		var random_row, random_column;
+
+		// Distribute required mines number
+		for (i = 0; i < this.mine_number; i++)
+		{
+			// Search for a random non-mined cell
+			do
+			{
+				random_row = Math.floor(Math.random() * this.rows_number);
+				random_column = Math.floor(Math.random() * this.cols_number);
+			}
+			while (this.field[random_row][random_column] == "*");
+
+			// Found a free cell, flag it as mined
+			this.field[random_row][random_column] = "*";
+		}
+	}
+
+
+
+	// Cell value calculation
+	// ---------------------------------------------------------------------
+	calculate_cells_values()
+	{
+		var adjacent_mines;
+		var i, j, k, w;
+
+		// Row by row
+		for (i = 0; i < this.rows_number; i++)
+		{
+			// Column by column
+			for (j = 0; j < this.cols_number; j++)
+			{
+				// Set cell adjacent mines number to zero
+				adjacent_mines = 0;
+
+				// Calculate only if cell is not mined
+				if (this.field[i][j] != "*")
+				{
+					// From one line above to one line below
+					for (k = -1; k < 2; k++)
+					{
+						// From one column to the left to one column to the right
+						for (w = -1; w < 2; w++)
+						{
+							if (i + k < 0) continue; // Skip if above row is out of the field
+							if (i + k >= this.rows_number) continue; // Skip if below row is out of the field
+							if (j + w < 0) continue; // Skip if left column is out of the field
+							if (j + w >= this.cols_number) continue; // Skip if right column is out of the
+							if (k == 0 && w == 0) continue; // Don't compare a cell with itself
+
+							// If current cell contains a mine, increase adjacent
+							// mines counter for this cell
+							if (this.field[i + k][j + w] == "*")
+							{
+								adjacent_mines++;
+							}
+						}
+					}
+
+					// Insert found value into cell value
+					this.field[i][j] = adjacent_mines;
+				}
+			}
+		}
+
+	}
+
+
+
+	// Field drawing procedure
+	// ---------------------------------------------------------------------
+	draw()
+	{
+		var i, j; // Counters
+		var field_el = $('#field'); // Field HTML element
+		var field_string = ''; // Empty HTML field string
+
+		// Unbind events and empty field
+		field_el.unbind();
+		field_el.empty();
+
+		var field_str = "";
+
+		// Row by row
+		for (i = 0; i < this.rows_number; i++)
+		{
+			// Column by column
+			for (j = 0; j < this.cols_number; j++)
+			{
+				var cell_id = 'row' + i + 'col' + j;
+				field_str += '<div class="cell" id="' + cell_id + '"><div class="front"></div><div class="back"></div></div>';
+			}
+		}
+
+		// Insert HTML field string into field HTML element
+		field_el.append(field_str);
+
+		// Resize field to fit window width/height
+		this.resize();
+	}
+
+
+
+	// Cell click listener callback
+	// ---------------------------------------------------------------------
+	cell_click(e, self)
+	{
+		var id;
+		var row, column;
+
+		// Get pressed cell row and column number
+		id = $(e.target).parent().attr('id');
+
+		row = parseInt(id.substring(3, id.indexOf('col')));
+		column = parseInt(id.substring(id.indexOf('col') + 3));
+
+		// Manage cell opening
+		self.open_cell(row, column, 0);
+	}
+
+
+
+	// Cell opening procedure
+	// ---------------------------------------------------------------------
+	open_cell(row, column, stack_level)
+	{
+		var i, j;
+		var cell;
+
+		// Cell HTML element
+		cell = $("#row" + row + "col" + column);
+
+		// If cell doesn't contain a mine, and it is not an alreay opened cell, increase open cells counter
+		if (this.field[row][column] != "*" && this.open_cells[row][column] == 0)
+		{
+			this.open_cells_number++;
+		}
+
+		// Update visual indicators
+		this.gui.update_indicators(this);
+
+		// Flag cell as opened
+		this.open_cells[row][column] = 1;
+		this.just_opened_cells.push([row, column]);
+
+		// Remove any cell flags and markers
+		this.marked_cells[row][column] = "";
+
+		// If cell has a numeric value, apply suited class
+		for (i = 1; i <= 8; i++)
+		{
+			if (this.field[row][column] == i) cell.addClass("mine_" + i);
+		}
+
+		// If a mined cell was pressed, you're dead
+		if (this.field[row][column] == "*")
+		{
+			cell.children(".back").addClass("mine");		// Apply mined CSS class
+			setTimeout("$('#field').trigger('round_losed')", 1000);		// Warn of death
+			this.mineblaster.game_over();			// Call end of game function
+
+			return;
+		};
+
+		// If remaining unopened cells number is 0, win
+		if (this.open_cells_number == (this.rows_number * this.cols_number) - this.mine_number)
+		{
+			setTimeout("$('#field').trigger('round_won')", 1000);		// Warn of victory
+			$('#remaining_cells, #remaining_mines').html('0');
+			this.mineblaster.game_over();			// Call end of game function
+			return;func
+		}
+
+		// If cell has zero value, recursively open all surrounding cells
+		if (this.field[row][column] == 0)
+		{
+			for (i= -1; i < 2; i++)
+			{
+				for (j = -1; j < 2; j++)
+				{
+					if (row + i < 0) continue;
+					if (row + i >= this.rows_number) continue;
+					if (column + j < 0) continue;
+					if (column + j >= this.cols_number) continue;
+					if (i == 0 && j == 0) continue;
+					if (this.open_cells[row + i][column + j] == 1) continue;
+
+					this.open_cell(row + i, column + j, stack_level + 1);
+				}
+			}
+		}
+
+		if (stack_level == 0)
+		{
+			this.flip_open_cells();
+		}
+
+	}
+
+
+
+	// Perpetrate cell opening
+	// ---------------------------------------------------------------------
+	flip_open_cells()
+	{
+		var i, j;
+		var delay = 0;
+
+		// Flip all just opened cells in the same order they where opened
+		for (i = 0; i < this.just_opened_cells.length; i++)
+		{
+			if (i == 0 && navigator.vibrate && this.settings.vibration)
+			{
+				navigator.vibrate(30);
+			}
+
+			var row = this.just_opened_cells[i][0];
+			var column = this.just_opened_cells[i][1];
+
+			if (this.open_cells[row][column] == 1)
+			{
+				var func = "$('#row" + row + "col" + column + "').addClass('open_cell');";
+
+				// If animations are enabled, queue them
+				if (options.animations)
+				{
+					this.timeouts.push(setTimeout(func, 20 + delay));
+				}
+
+				// If animations are disabled, don't start them
+				else
+				{
+					$('#row' + row + 'col' + column).addClass('open_cell');
+				}
+
+				// 10ms delay between cells opening
+				delay += 20;
+			}
+		}
+
+		// Empty just opened cells array
+		this.just_opened_cells = [];
+	}
+
+
+
+	// If double click on opened cell, if it has a satisfied mine number,
+	// open all surrounding cells, except for mine-flagged ones
+	// ---------------------------------------------------------------------
+	open_surrounding_cells(e, self)
+	{
+		var i, j;
+		var marked_mines_number = 0;
+		var id = $(e.target).parent().attr("id");
+		var row = parseInt(id.substring(3, id.indexOf("col")));
+		var column = parseInt(id.substring(id.indexOf("col") + 3));
+
+		// If cell is not open, skip (it shouldn't be a possible case)
+		if (self.open_cells[row][column] == 0) return false;
+
+		// Row by row
+		for (i = -1; i < 2; i++)
+		{
+			// Column by column
+			for (j = -1; j < 2; j++)
+			{
+				if (row + i < 0) continue;
+				if (row + i >= self.rows_number) continue;
+				if (column + j < 0) continue;
+				if (column + j >= self.cols_number) continue;
+				if (i == 0 && j == 0) continue;
+				if (self.open_cells[row + i][column + j] == 1) continue;
+
+				if (self.marked_cells[row + i][column + j] == "M") marked_mines_number++;
+			}
+		}
+
+		// If marked mines is greater or equal to cell value,
+		// open all non-market surrounding ones
+		if (marked_mines_number >= self.field[row][column])
+		{
+			// Row by row
+			for (i = -1; i < 2; i++)
+			{
+				// Column by column
+				for (j = -1; j < 2; j++)
+				{
+					if (row + i < 0) continue;
+					if (row + i >= self.rows_number) continue;
+					if (column + j < 0) continue;
+					if (column + j >= self.cols_number) continue;
+					if (i == 0 && j == 0) continue;
+					if (self.open_cells[row + i][column + j] == 1) continue;
+
+					// Do cell opening
+					if (self.marked_cells[row + i][column + j] != "M")
+					{
+						self.open_cell(row + i, column + j, 1);	// Stack start from 1 because at level 0 it calls flip. Instead is going to be called here
+					}
+				}
+			}
+		}
+
+		self.flip_open_cells();
+	}
+
+
+
+	// Right mouse click listener, for cell marking capability
+	// ---------------------------------------------------------------------
+	right_mouse_button(e, self)
+	{
+		var id;
+		var row, column;
+
+		// 3 is right mouse button value
+		if (e.which === 3)
+		{
+			// Get pressed cell row and column number
+			id = $(e.target).parent().attr("id");
+
+			row = parseInt(id.substring(3, id.indexOf("col")));
+			column = parseInt(id.substring(id.indexOf("col") + 3));
+
+			// If cell is already open, do nothing
+			if (self.open_cells[row][column] == 1)
+			{
+				return false;
+			}
+
+			// Jump between cell possible states
+			if (self.marked_cells[row][column] == "")
+			{
+				self.marked_cells[row][column] = "M";
+				$("#row" + row + "col" + column).addClass('mined');
+			}
+			else if (self.marked_cells[row][column] == "M")
+			{
+				self.marked_cells[row][column] = "?";
+				$("#row" + row + "col" + column).removeClass('mined');
+				$("#row" + row + "col" + column).addClass('unknown');
+			}
+			else if (self.marked_cells[row][column] == "?")
+			{
+				self.marked_cells[row][column] = "";
+				$("#row" + row + "col" + column).removeClass('unknown');
+			}
+
+
+			// Vibrate on mobile devices
+			if (navigator.vibrate && options.vibration)
+			{
+				navigator.vibrate(30);
+			}
+
+
+
+
+			// If cell assumes mied state, remove opening cell listener
+			if (self.marked_cells[row][column] == "M")
+			{
+				$("#row" + row + "col" + column).unbind("click");
+			}
+
+			// If cell is de-marked, reapply click-to-open listener
+			if (self.marked_cells[row][column] == "")
+			{
+				$("#row" + row + "col" + column).click(function(e) { self.cell_click(e, self); });
+			}
+
+			// Update visual indicators
+			self.gui.update_indicators(self);
+		}
+	}
+
+
+
+	// Resize field cells to fit window size
+	// ---------------------------------------------------------------------
+	resize()
+	{
+		var i, j;
+
+		// Disable transition effect for cells
+		$(".cell").addClass("no_transition");
+
+		// Set field size
+		var window_w = $(window).outerWidth();
+		var window_h = $(window).outerHeight() - $('#indicators').outerHeight() - 10;
+
+		var cell_w = window_w / this.cols_number;
+		var cell_h = window_h / this.rows_number;
+		cell_h = cell_w = Math.min(cell_w, cell_h);
+
+		// Minimum width
+		if (cell_w < 30)
+		{
+			cell_w = cell_h = 30;
+		}
+
+		// Only integer cell sizes, due to firefox collapsing some adjacent borders
+		// when using decimal sizes
+		cell_w = Math.floor(cell_w);
+		cell_h = Math.floor(cell_h);
+
+		$("div.cell").width(cell_w);
+		$("div.cell").height(cell_h);
+
+		var field_w = (cell_w * this.cols_number);
+		var field_h = cell_h * this.rows_number;
+
+		$('#field').width(field_w);
+		$('#field').height(field_h);
+
+		// Center field horizontally
+		var offset_x = ($(window).outerWidth() - $('#field').outerWidth()) / 2;
+		$('#field').css({
+			'left' : offset_x + 'px'
+		});
+
+		// Center field vertically
+		var controls_height = $('#indicators').outerHeight();
+		var field_y = (($(window).outerHeight() - controls_height - $('#field').outerHeight()) / 2);
+
+		if (field_y < 0) field_y = 0;
+
+		var offset_y = controls_height + field_y;
+		$('#field').css({'top' : offset_y + 'px'});
+
+		// Re-enable transition effect for cells
+		$(".cell").removeClass("no_transition");
+
+		// Centers message, if open
+		this.gui.message.center();
+	}
+}
