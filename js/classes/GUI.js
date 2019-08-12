@@ -23,7 +23,7 @@ class GUI
 		this.menu = new Menu();
 		this.message = new Message();
 
-		if (options.animations)
+		if (this.settings.animations)
 		{
 			$('#field').addClass('animated');
 		}

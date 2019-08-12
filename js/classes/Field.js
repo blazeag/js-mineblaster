@@ -219,7 +219,6 @@ class Field
 	// ---------------------------------------------------------------------
 	draw()
 	{
-		var i, j; // Counters
 		var field_el = $('#field'); // Field HTML element
 		var field_string = ''; // Empty HTML field string
 
@@ -230,13 +229,12 @@ class Field
 		var field_str = "";
 
 		// Row by row
-		for (i = 0; i < this.rows_number; i++)
+		for (var i = 0; i < this.rows_number; i++)
 		{
 			// Column by column
-			for (j = 0; j < this.cols_number; j++)
+			for (var j = 0; j < this.cols_number; j++)
 			{
-				var cell_id = 'row' + i + 'col' + j;
-				field_str += '<div class="cell" id="' + cell_id + '"><div class="front"></div><div class="back"></div></div>';
+				field_str += '<div class="cell" data-row="' + i + '" data-col="' + j + '"><div class="front"></div><div class="back"></div></div>';
 			}
 		}
 
@@ -253,14 +251,11 @@ class Field
 	// ---------------------------------------------------------------------
 	cell_click(e, self)
 	{
-		var id;
-		var row, column;
-
 		// Get pressed cell row and column number
-		id = $(e.target).parent().attr('id');
+		var el = $(e.target).parent();
 
-		row = parseInt(id.substring(3, id.indexOf('col')));
-		column = parseInt(id.substring(id.indexOf('col') + 3));
+		var row = el.data('row');
+		var column = el.data('col');
 
 		// Manage cell opening
 		self.open_cell(row, column, 0);
@@ -273,7 +268,7 @@ class Field
 	open_cell(row, column, stack_level)
 	{
 		// Cell HTML element
-		var cell = $("#row" + row + "col" + column);
+		var cell = $("[data-row='" + row + "'][data-col='" + column + "']");
 
 		// If cell doesn't contain a mine, and it is not an alreay opened cell, increase open cells counter
 		if (this.cells[row][column].mined == false && this.cells[row][column].open == false)
@@ -345,11 +340,10 @@ class Field
 	// ---------------------------------------------------------------------
 	flip_open_cells()
 	{
-		var i, j;
 		var delay = 0;
 
 		// Flip all just opened cells in the same order they where opened
-		for (i = 0; i < this.just_opened_cells.length; i++)
+		for (var i = 0; i < this.just_opened_cells.length; i++)
 		{
 			if (i == 0 && navigator.vibrate && this.settings.vibration)
 			{
@@ -361,7 +355,7 @@ class Field
 
 			if (this.cells[row][column].open == true)
 			{
-				var func = "$('#row" + row + "col" + column + "').addClass('open_cell');";
+				var func = "$(\"[data-row='" + row + "'][data-col='" + column + "']\").addClass('open_cell');";
 
 				// If animations are enabled, queue them
 				if (options.animations)
@@ -372,7 +366,7 @@ class Field
 				// If animations are disabled, don't start them
 				else
 				{
-					$('#row' + row + 'col' + column).addClass('open_cell');
+					$("[data-row='" + row + "'][data-col='" + column + "']").addClass('open_cell');
 				}
 
 				// 10ms delay between cells opening
@@ -391,11 +385,11 @@ class Field
 	// ---------------------------------------------------------------------
 	open_surrounding_cells(e, self)
 	{
-		var i, j;
 		var marked_mines_number = 0;
-		var id = $(e.target).parent().attr("id");
-		var row = parseInt(id.substring(3, id.indexOf("col")));
-		var column = parseInt(id.substring(id.indexOf("col") + 3));
+
+		var el = $(e.target).parent();
+		var row = el.data("row");
+		var column = el.data("col");
 
 		// If cell is not open, skip (it shouldn't be a possible case)
 		if (self.cells[row][column].open == false)
@@ -404,10 +398,10 @@ class Field
 		}
 
 		// Row by row
-		for (i = -1; i < 2; i++)
+		for (var i = -1; i < 2; i++)
 		{
 			// Column by column
-			for (j = -1; j < 2; j++)
+			for (var j = -1; j < 2; j++)
 			{
 				if (row + i < 0) continue;
 				if (row + i >= self.rows_number) continue;
@@ -425,10 +419,10 @@ class Field
 		if (marked_mines_number >= self.cells[row][column].adjacent_mines)
 		{
 			// Row by row
-			for (i = -1; i < 2; i++)
+			for (var i = -1; i < 2; i++)
 			{
 				// Column by column
-				for (j = -1; j < 2; j++)
+				for (var j = -1; j < 2; j++)
 				{
 					if (row + i < 0) continue;
 					if (row + i >= self.rows_number) continue;
@@ -455,17 +449,14 @@ class Field
 	// ---------------------------------------------------------------------
 	right_mouse_button(e, self)
 	{
-		var id;
-		var row, column;
-
 		// 3 is right mouse button value
 		if (e.which === 3)
 		{
 			// Get pressed cell row and column number
-			id = $(e.target).parent().attr("id");
+			var el = $(e.target).parent();
 
-			row = parseInt(id.substring(3, id.indexOf("col")));
-			column = parseInt(id.substring(id.indexOf("col") + 3));
+			var row = el.data("row");
+			var column = el.data("col");
 
 			// If cell is already open, do nothing
 			if (self.cells[row][column].open == 1)
@@ -477,18 +468,18 @@ class Field
 			if (self.cells[row][column].marker == "")
 			{
 				self.cells[row][column].marker = "M";
-				$("#row" + row + "col" + column).addClass('mined');
+				el.addClass('mined');
 			}
 			else if (self.cells[row][column].marker == "M")
 			{
 				self.cells[row][column].marker = "?";
-				$("#row" + row + "col" + column).removeClass('mined');
-				$("#row" + row + "col" + column).addClass('unknown');
+				el.removeClass('mined');
+				el.addClass('unknown');
 			}
 			else if (self.cells[row][column].marker == "?")
 			{
 				self.cells[row][column].marker = "";
-				$("#row" + row + "col" + column).removeClass('unknown');
+				el.removeClass('unknown');
 			}
 
 
@@ -504,13 +495,13 @@ class Field
 			// If cell assumes mied state, remove opening cell listener
 			if (self.cells[row][column].marker == "M")
 			{
-				$("#row" + row + "col" + column).off("click");
+				el.off("click");
 			}
 
 			// If cell is de-marked, reapply click-to-open listener
 			if (self.cells[row][column].marker == "")
 			{
-				$("#row" + row + "col" + column).on("click", function(e) { self.cell_click(e, self); });
+				el.on("click", function(e) { self.cell_click(e, self); });
 			}
 
 			// Update visual indicators
@@ -524,8 +515,6 @@ class Field
 	// ---------------------------------------------------------------------
 	resize(self)
 	{
-		var i, j;
-
 		// Disable transition effect for cells
 		$(".cell").addClass("no_transition");
 
