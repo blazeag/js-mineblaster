@@ -9,7 +9,7 @@ class Message
 			new_game_bt = false;
 		}
 
-		$('#msg_new_game').unbind('click');
+		$('#msg_new_game').off('click');
 
 		var msg_box = $('#message_box');
 		var msg_div = $('<div id="message_text">' + msg + '</div>');
@@ -19,7 +19,7 @@ class Message
 		if (new_game_bt)
 		{
 			$('#message_text').append('<input type="button" id="msg_new_game" value="New Game">');
-			$('#msg_new_game').click(mineblaster.field.initialize);
+			$('#msg_new_game').on('click', function() { mineblaster.field.initialize(mineblaster.field); });
 		}
 
 		msg_box.css({visibility: 'hidden'});

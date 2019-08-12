@@ -39,14 +39,22 @@ class Mineblaster
 		this.settings.load();
 		this.field = {};
 
-		this.gui = new GUI(this.settings, this.field);
-		this.gui.initialize();		// GUI initialization
-
+		this.gui = new GUI(this.settings);
 		this.field = new Field(this, this.settings, this.gui);
-		this.field.initialize();		// Field initialization
+
+		this.gui.initialize(this.gui);		// GUI initialization
+		this.field.initialize(this.field);		// Field initialization
 
 		// Resize field on resize window
-		$(window).resize(function () { self.field.resize(self); });
+		$(window).on("resize", function () { self.field.resize(self); });
+
+
+		// Regeneration button listener
+		$("#regenerate").on('mouseup', function () { self.field.initialize(self.field); });
+
+		// Message fadeout on click
+		$('#message_box').on('click', function () { $(this).fadeOut(); });
+
 	}
 
 
@@ -58,7 +66,7 @@ class Mineblaster
 		var i, j;
 
 		// Game over, remove all cells listeners
-		$(".cell").unbind();
+		$(".cell").off();
 
 		// Show all mines position except the exploded one
 		for (i = 0; i < this.field.rows_number; i++)

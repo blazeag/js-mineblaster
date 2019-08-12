@@ -7,12 +7,6 @@ class Field
 		this.settings = settings;
 		this.gui = gui;
 
-		this.cells = [];	// Array containing mines and cells values
-
-		this.open_cells_number = 0;		// Open cells counter
-		this.marked_mines_number;	// Mine-marked cells number
-		this.just_opened_cells;	// List of just opened cells
-
 		this.rows_number;		// Field rows number
 		this.cols_number;		// Field columns number
 		this.mine_number;		// Field mines number
@@ -22,30 +16,32 @@ class Field
 
 	// Field initialization
 	// ---------------------------------------------------------------------
-	initialize()
+	initialize(self)
 	{
-		for (var i = 0; i < this.timeouts.length; i++)
+		this.cells = [];	// Array containing mines and cells values
+		this.open_cells_number = 0;		// Open cells counter
+		this.marked_mines_number = 0;	// Mine-marked cells number
+		this.just_opened_cells = [];	// List of just opened cells
+
+		for (var i = 0; i < self.timeouts.length; i++)
 		{
-			clearTimeout(this.timeouts[i]);
+			clearTimeout(self.timeouts[i]);
 		}
 
 		// Parameters check
-		if (! this.check_parameters())
+		if (! self.check_parameters())
 		{
 			return false;
 		};
 
 
-
-		var self = this;
-
-		this.gui.message.hide();
+		self.gui.message.hide();
 
 		// Change background color and then call field rebuilding
-		this.gui.change_background(function() { self.rebuild(self); });
+		self.gui.change_background(function() { self.rebuild(self); });
 
 		// Close options, if open
-		this.gui.menu.close();
+		self.gui.menu.close();
 	}
 
 
@@ -114,15 +110,13 @@ class Field
 		self.gui.update_indicators(self);
 
 		// Unbind all previously associated cells listeners
-		$(".cell").unbind();
+		$(".cell").off();
 
 		// Associate new events to cells
-		$(".cell").click(function(e) { self.cell_click(e, self); });				// Cell opening listener
-		$(".cell").dblclick(function(e) { self.open_surrounding_cells(e, self) });		// Surrounding cells opening listener
-		$(".cell").mousedown(function(e) { self.right_mouse_button(e, self); });			// Cell marking listener
-		$("#field").bind("contextmenu", function (e) {		// Avoid cells contextual menu on right mouse button click
-			e.preventDefault();
-		});
+		$(".cell").on("click", function(e) { self.cell_click(e, self); });				// Cell opening listener
+		$(".cell").on("dblclick", function(e) { self.open_surrounding_cells(e, self) });		// Surrounding cells opening listener
+		$(".cell").on("mousedown", function(e) { self.right_mouse_button(e, self); });			// Cell marking listener
+		$("#field").on("contextmenu", function (e) { e.preventDefault(); });	// Avoid cells contextual menu on right mouse button click
 
 	}
 
@@ -230,7 +224,7 @@ class Field
 		var field_string = ''; // Empty HTML field string
 
 		// Unbind events and empty field
-		field_el.unbind();
+		field_el.off();
 		field_el.empty();
 
 		var field_str = "";
@@ -304,7 +298,7 @@ class Field
 		if (this.cells[row][column].mined == true)
 		{
 			cell.children(".back").addClass("mine");		// Apply mined CSS class
-			setTimeout("$('#field').trigger('round_losed')", 1000);		// Warn of death
+			setTimeout("mineblaster.gui.message.show(\"You're dead :(\", 500, true)", 1000);		// Warn of death
 			this.mineblaster.game_over();			// Call end of game function
 
 			return;
@@ -313,10 +307,10 @@ class Field
 		// If remaining unopened cells number is 0, win
 		if (this.open_cells_number == (this.rows_number * this.cols_number) - this.mine_number)
 		{
-			setTimeout("$('#field').trigger('round_won')", 1000);		// Warn of victory
+			setTimeout("mineblaster.gui.message.show(\"You win! :)\", 500, true)", 1000);		// Warn of victory
 			$('#remaining_cells, #remaining_mines').html('0');
 			this.mineblaster.game_over();			// Call end of game function
-			return;func
+			return;
 		}
 
 		// If cell has zero value, recursively open all surrounding cells
@@ -510,13 +504,13 @@ class Field
 			// If cell assumes mied state, remove opening cell listener
 			if (self.cells[row][column].marker == "M")
 			{
-				$("#row" + row + "col" + column).unbind("click");
+				$("#row" + row + "col" + column).off("click");
 			}
 
 			// If cell is de-marked, reapply click-to-open listener
 			if (self.cells[row][column].marker == "")
 			{
-				$("#row" + row + "col" + column).click(function(e) { self.cell_click(e, self); });
+				$("#row" + row + "col" + column).on("click", function(e) { self.cell_click(e, self); });
 			}
 
 			// Update visual indicators

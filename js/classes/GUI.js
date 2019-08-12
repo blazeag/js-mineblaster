@@ -1,9 +1,8 @@
 class GUI
 {
-	constructor(settings, field)
+	constructor(settings)
 	{
 		this.settings = settings;
-		this.field = field;
 		this.background_colors = ['#930', '#390', '#039', '#9a0', '#399', '#939', '#e50', '#999'];	// Background colors
 
 		this.images = ['imgs/mineblaster_icon.svg', 'imgs/wrong_mine.svg', 'imgs/menu.svg', 'imgs/mine.svg',
@@ -14,10 +13,8 @@ class GUI
 
 	// GUI initialization
 	// --------------------------------------------------------
-	initialize()
+	initialize(self)
 	{
-		var self = this;
-
 		this.preloaded_images = new Array();
 		this.current_background = '';
 
@@ -38,9 +35,9 @@ class GUI
 		});
 		$(document).on('click', function() { self.menu.close() });
 
-		$('#vibration').change(function ()
+		$('#vibration').change(function (e)
 		{
-			if ($(self).is(':checked'))
+			if ($(e.target).is(':checked'))
 			{
 				self.settings.vibration = true;
 			}
@@ -54,9 +51,9 @@ class GUI
 
 		});
 
-		$('#animations').change(function () {
+		$('#animations').change(function (e) {
 
-			if ($(self).is(':checked'))
+			if ($(e.target).is(':checked'))
 			{
 				self.settings.animations = true;
 				$('#field').addClass('animated');
@@ -72,12 +69,6 @@ class GUI
 			self.settings.save_to_cookie('animations', self.settings.animations);
 
 		});
-
-		// Regeneration button listener
-		$("#regenerate").on('mouseup', function () { self.field.initialize(); });
-
-		// Message fadeout on click
-		$('#message_box').on('click', function () { $(this).fadeOut(); });
 	}
 
 
