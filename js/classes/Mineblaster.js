@@ -33,6 +33,8 @@ class Mineblaster
 	// ---------------------------------------------------------------------
 	initialize()
 	{
+		var self = this;
+
 		this.settings = new Settings();
 		this.settings.load();
 		this.field = {};
@@ -44,7 +46,7 @@ class Mineblaster
 		this.field.initialize();		// Field initialization
 
 		// Resize field on resize window
-		$(window).resize(this.resize);
+		$(window).resize(function () { self.field.resize(self); });
 	}
 
 
@@ -64,13 +66,13 @@ class Mineblaster
 			for (j = 0; j < this.field.cols_number; j++)
 			{
 				// Show wrong marked mine
-				if (this.field.marked_cells[i][j] == "M" && this.field.field[i][j] != "*")
+				if (this.field.cells[i][j].marker == "M" && this.field.cells[i][j].mined == false)
 				{
 					$("#row" + i + "col" + j + " .front").html('').addClass("wrong_mine");
 				}
 
 				// Show non-marked mines
-				if (this.field.field[i][j] == "*" && this.field.open_cells[i][j] == 0)
+				if (this.field.cells[i][j].mined == true && this.field.cells[i][j].open == false)
 				{
 					$("#row" + i + "col" + j + " .front").html('').addClass("demined");
 				}

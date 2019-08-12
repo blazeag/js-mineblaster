@@ -143,7 +143,7 @@ class GUI
 		{
 			for (j = 0; j < field.cols_number; j++)
 			{
-				if (field.marked_cells[i][j] == "M")
+				if (field.cells[i][j].marker == "M")
 				{
 					field.marked_mines_number++;
 				}

@@ -6,9 +6,8 @@ class Field
 		this.mineblaster = mineblaster;
 		this.settings = settings;
 		this.gui = gui;
-		this.field = new Array();	// Array containing mines and cells values
-		this.open_cells = new Array();;			// Array containing open cells boolean flags
-		this.marked_cells = new Array();;		// Array containing cell markers
+
+		this.cells = [];	// Array containing mines and cells values
 
 		this.open_cells_number = 0;		// Open cells counter
 		this.marked_mines_number;	// Mine-marked cells number
@@ -18,7 +17,13 @@ class Field
 		this.cols_number;		// Field columns number
 		this.mine_number;		// Field mines number
 		this.timeouts = [];		// Timeout container
+	}
 
+
+	// Field initialization
+	// ---------------------------------------------------------------------
+	initialize()
+	{
 		for (var i = 0; i < this.timeouts.length; i++)
 		{
 			clearTimeout(this.timeouts[i]);
@@ -29,13 +34,9 @@ class Field
 		{
 			return false;
 		};
-	}
 
 
-	// Field initialization
-	// ---------------------------------------------------------------------
-	initialize()
-	{
+
 		var self = this;
 
 		this.gui.message.hide();
@@ -131,24 +132,17 @@ class Field
 	// ---------------------------------------------------------------------
 	generate()
 	{
-		var i, j;
-		var random;
-
 		this.just_opened_cells = [];
 
 		// Draw field row by row
-		for (i = 0; i < this.rows_number; i++)
+		for (var i = 0; i < this.rows_number; i++)
 		{
-			this.field[i] = new Array();
-			this.open_cells[i] = new Array();
-			this.marked_cells[i] = new Array();
+			this.cells[i] = [];
 
 			// Column by column
-			for (j = 0; j < this.cols_number; j++)
+			for (var j = 0; j < this.cols_number; j++)
 			{
-				this.field[i][j] = "";
-				this.marked_cells[i][j] = "";
-				this.open_cells[i][j] = 0;
+				this.cells[i][j] = new Cell();
 			}
 		}
 	}
@@ -159,22 +153,19 @@ class Field
 	// ---------------------------------------------------------------------
 	plant_mines()
 	{
-		var i;
-		var random_row, random_column;
-
 		// Distribute required mines number
-		for (i = 0; i < this.mine_number; i++)
+		for (var i = 0; i < this.mine_number; i++)
 		{
 			// Search for a random non-mined cell
 			do
 			{
-				random_row = Math.floor(Math.random() * this.rows_number);
-				random_column = Math.floor(Math.random() * this.cols_number);
+				var random_row = Math.floor(Math.random() * this.rows_number);
+				var random_column = Math.floor(Math.random() * this.cols_number);
 			}
-			while (this.field[random_row][random_column] == "*");
+			while (this.cells[random_row][random_column].mined == true);
 
 			// Found a free cell, flag it as mined
-			this.field[random_row][random_column] = "*";
+			this.cells[random_row][random_column].mined = true;
 		}
 	}
 
@@ -197,7 +188,7 @@ class Field
 				adjacent_mines = 0;
 
 				// Calculate only if cell is not mined
-				if (this.field[i][j] != "*")
+				if (this.cells[i][j].mined == false)
 				{
 					// From one line above to one line below
 					for (k = -1; k < 2; k++)
@@ -213,7 +204,7 @@ class Field
 
 							// If current cell contains a mine, increase adjacent
 							// mines counter for this cell
-							if (this.field[i + k][j + w] == "*")
+							if (this.cells[i + k][j + w].mined == true)
 							{
 								adjacent_mines++;
 							}
@@ -221,7 +212,7 @@ class Field
 					}
 
 					// Insert found value into cell value
-					this.field[i][j] = adjacent_mines;
+					this.cells[i][j].adjacent_mines = adjacent_mines;
 				}
 			}
 		}
@@ -259,7 +250,7 @@ class Field
 		field_el.append(field_str);
 
 		// Resize field to fit window width/height
-		this.resize();
+		this.resize(this);
 	}
 
 
@@ -287,14 +278,11 @@ class Field
 	// ---------------------------------------------------------------------
 	open_cell(row, column, stack_level)
 	{
-		var i, j;
-		var cell;
-
 		// Cell HTML element
-		cell = $("#row" + row + "col" + column);
+		var cell = $("#row" + row + "col" + column);
 
 		// If cell doesn't contain a mine, and it is not an alreay opened cell, increase open cells counter
-		if (this.field[row][column] != "*" && this.open_cells[row][column] == 0)
+		if (this.cells[row][column].mined == false && this.cells[row][column].open == false)
 		{
 			this.open_cells_number++;
 		}
@@ -303,20 +291,17 @@ class Field
 		this.gui.update_indicators(this);
 
 		// Flag cell as opened
-		this.open_cells[row][column] = 1;
+		this.cells[row][column].open = true;
 		this.just_opened_cells.push([row, column]);
 
 		// Remove any cell flags and markers
-		this.marked_cells[row][column] = "";
+		this.cells[row][column].marker = '';
 
 		// If cell has a numeric value, apply suited class
-		for (i = 1; i <= 8; i++)
-		{
-			if (this.field[row][column] == i) cell.addClass("mine_" + i);
-		}
+		cell.addClass("mine_" + this.cells[row][column].adjacent_mines);
 
 		// If a mined cell was pressed, you're dead
-		if (this.field[row][column] == "*")
+		if (this.cells[row][column].mined == true)
 		{
 			cell.children(".back").addClass("mine");		// Apply mined CSS class
 			setTimeout("$('#field').trigger('round_losed')", 1000);		// Warn of death
@@ -335,18 +320,18 @@ class Field
 		}
 
 		// If cell has zero value, recursively open all surrounding cells
-		if (this.field[row][column] == 0)
+		if (this.cells[row][column].adjacent_mines == 0)
 		{
-			for (i= -1; i < 2; i++)
+			for (var i = -1; i < 2; i++)
 			{
-				for (j = -1; j < 2; j++)
+				for (var j = -1; j < 2; j++)
 				{
 					if (row + i < 0) continue;
 					if (row + i >= this.rows_number) continue;
 					if (column + j < 0) continue;
 					if (column + j >= this.cols_number) continue;
 					if (i == 0 && j == 0) continue;
-					if (this.open_cells[row + i][column + j] == 1) continue;
+					if (this.cells[row + i][column + j].open == true) continue;
 
 					this.open_cell(row + i, column + j, stack_level + 1);
 				}
@@ -380,7 +365,7 @@ class Field
 			var row = this.just_opened_cells[i][0];
 			var column = this.just_opened_cells[i][1];
 
-			if (this.open_cells[row][column] == 1)
+			if (this.cells[row][column].open == true)
 			{
 				var func = "$('#row" + row + "col" + column + "').addClass('open_cell');";
 
@@ -419,7 +404,10 @@ class Field
 		var column = parseInt(id.substring(id.indexOf("col") + 3));
 
 		// If cell is not open, skip (it shouldn't be a possible case)
-		if (self.open_cells[row][column] == 0) return false;
+		if (self.cells[row][column].open == false)
+		{
+			return false;
+		}
 
 		// Row by row
 		for (i = -1; i < 2; i++)
@@ -432,15 +420,15 @@ class Field
 				if (column + j < 0) continue;
 				if (column + j >= self.cols_number) continue;
 				if (i == 0 && j == 0) continue;
-				if (self.open_cells[row + i][column + j] == 1) continue;
+				if (self.cells[row + i][column + j].open == true) continue;
 
-				if (self.marked_cells[row + i][column + j] == "M") marked_mines_number++;
+				if (self.cells[row + i][column + j].marker == "M") marked_mines_number++;
 			}
 		}
 
 		// If marked mines is greater or equal to cell value,
 		// open all non-market surrounding ones
-		if (marked_mines_number >= self.field[row][column])
+		if (marked_mines_number >= self.cells[row][column].adjacent_mines)
 		{
 			// Row by row
 			for (i = -1; i < 2; i++)
@@ -453,10 +441,10 @@ class Field
 					if (column + j < 0) continue;
 					if (column + j >= self.cols_number) continue;
 					if (i == 0 && j == 0) continue;
-					if (self.open_cells[row + i][column + j] == 1) continue;
+					if (self.cells[row + i][column + j].open == true) continue;
 
 					// Do cell opening
-					if (self.marked_cells[row + i][column + j] != "M")
+					if (self.cells[row + i][column + j].marker != "M")
 					{
 						self.open_cell(row + i, column + j, 1);	// Stack start from 1 because at level 0 it calls flip. Instead is going to be called here
 					}
@@ -486,26 +474,26 @@ class Field
 			column = parseInt(id.substring(id.indexOf("col") + 3));
 
 			// If cell is already open, do nothing
-			if (self.open_cells[row][column] == 1)
+			if (self.cells[row][column].open == 1)
 			{
 				return false;
 			}
 
 			// Jump between cell possible states
-			if (self.marked_cells[row][column] == "")
+			if (self.cells[row][column].marker == "")
 			{
-				self.marked_cells[row][column] = "M";
+				self.cells[row][column].marker = "M";
 				$("#row" + row + "col" + column).addClass('mined');
 			}
-			else if (self.marked_cells[row][column] == "M")
+			else if (self.cells[row][column].marker == "M")
 			{
-				self.marked_cells[row][column] = "?";
+				self.cells[row][column].marker = "?";
 				$("#row" + row + "col" + column).removeClass('mined');
 				$("#row" + row + "col" + column).addClass('unknown');
 			}
-			else if (self.marked_cells[row][column] == "?")
+			else if (self.cells[row][column].marker == "?")
 			{
-				self.marked_cells[row][column] = "";
+				self.cells[row][column].marker = "";
 				$("#row" + row + "col" + column).removeClass('unknown');
 			}
 
@@ -520,13 +508,13 @@ class Field
 
 
 			// If cell assumes mied state, remove opening cell listener
-			if (self.marked_cells[row][column] == "M")
+			if (self.cells[row][column].marker == "M")
 			{
 				$("#row" + row + "col" + column).unbind("click");
 			}
 
 			// If cell is de-marked, reapply click-to-open listener
-			if (self.marked_cells[row][column] == "")
+			if (self.cells[row][column].marker == "")
 			{
 				$("#row" + row + "col" + column).click(function(e) { self.cell_click(e, self); });
 			}
@@ -540,7 +528,7 @@ class Field
 
 	// Resize field cells to fit window size
 	// ---------------------------------------------------------------------
-	resize()
+	resize(self)
 	{
 		var i, j;
 
@@ -594,6 +582,6 @@ class Field
 		$(".cell").removeClass("no_transition");
 
 		// Centers message, if open
-		this.gui.message.center();
+		self.gui.message.center();
 	}
 }
