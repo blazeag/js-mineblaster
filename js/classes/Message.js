@@ -29,6 +29,7 @@ class Message
 
 		if (animations)
 		{
+			$('#mineblaster').css({filter: 'blur(5px)'});
 			msg_box.fadeIn(timing);
 		}
 		else
@@ -46,6 +47,7 @@ class Message
 		// Remove end message, if present
 		if (animations)
 		{
+			$('#mineblaster').css('filter', 'none');
 			$("#message_box").fadeOut();
 		}
 		else

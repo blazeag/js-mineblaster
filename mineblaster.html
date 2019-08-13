@@ -36,37 +36,38 @@
 
 	<body>
 
-		<!-- Controls container -->
-		<div id="controls_box">
-			<div id="controls">
+		<div id="mineblaster">
+			<!-- Controls container -->
+			<div id="controls_box">
+				<div id="controls">
 
-				<!-- Field parameters container -->
-				<div id="parameters">
-					<span class="parameter"><span class="short">R</span><span class="long">Rows</span> <input type="number" id="rows_number" value="10" min="1" max="30" /></span>
-					<span class="parameter"><span class="short">C</span><span class="long">Columns</span> <input type="number" id="cols_number" value="10" min="1" max="30" /></span>
-					<span class="parameter"><span class="short">M</span><span class="long">Mines</span> <input type="number" id="mine_number" value="10" min="1" /></span>
+					<!-- Field parameters container -->
+					<div id="parameters">
+						<span class="parameter"><span class="short">R</span><span class="long">Rows</span> <input type="number" id="rows_number" value="10" min="1" max="30" /></span>
+						<span class="parameter"><span class="short">C</span><span class="long">Columns</span> <input type="number" id="cols_number" value="10" min="1" max="30" /></span>
+						<span class="parameter"><span class="short">M</span><span class="long">Mines</span> <input type="number" id="mine_number" value="10" min="1" /></span>
 
-					<div class="option">
-						<input type="checkbox" id="vibration" checked="checked" /> Vibration
-						<input type="checkbox" id="animations" checked="checked" /> Animations
-						</div>
-					<div><input id="regenerate" type="button" value="New Game" /></div>
+						<div class="option">
+							<input type="checkbox" id="vibration" checked="checked" /> Vibration
+							<input type="checkbox" id="animations" checked="checked" /> Animations
+							</div>
+						<div><input id="regenerate" type="button" value="New Game" /></div>
+					</div>
+
+					<!-- Visual game indicators container -->
+					<div id="indicators">
+						<span class="indicator">Cells left: <span id="remaining_cells"></span></span>
+						<span class="indicator">Mines left: <span id="remaining_mines"></span></span>
+						<span id="settings"></span>
+					</div>
+
 				</div>
-
-				<!-- Visual game indicators container -->
-				<div id="indicators">
-					<span class="indicator">Cells left: <span id="remaining_cells"></span></span>
-					<span class="indicator">Mines left: <span id="remaining_mines"></span></span>
-					<span id="settings"></span>
-				</div>
-
 			</div>
+
+
+			<!-- Field container -->
+			<div id="field"></div>
 		</div>
-
-
-		<!-- Field container -->
-		<div id="field"></div>
-
 
 
 		<!-- Messages container -->
