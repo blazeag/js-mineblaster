@@ -53,7 +53,7 @@ class Mineblaster
 		$("#regenerate").on('mouseup', function () { self.field.initialize(self.field); });
 
 		// Message fadeout on click
-		$('#message_box').on('click', function () { $(this).fadeOut(); });
+		$('#message_box').on('click', function () { self.gui.message.hide(self.settings.animations); });
 
 	}
 

@@ -24,7 +24,7 @@ body {
 	color: rgba(255, 255, 255, 0.5);
 }
 
-#options {
+#settings {
 	float: right;
 	margin-right: 0px;
 	display: inline-block;
@@ -48,7 +48,7 @@ body {
 	margin-top: 10px;
 }
 
-#options, input[type='button'] {
+#settings, input[type='button'] {
 	cursor: pointer;
 }
 
@@ -248,13 +248,13 @@ div#field {
 {
 	.long { display: none; }
 	.short { display: inline; }
-	
+
 	#controls {
 		margin-bottom: 0px;
 	}
-	
+
 	input[type="button"] {
 		margin-left: 0px;
 	}
-	
+
 }

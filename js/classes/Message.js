@@ -2,34 +2,32 @@
 // ---------------------------------------------------------------------
 class Message
 {
-	show(msg, timing, new_game_bt)
+	show(msg, timing, animations, new_game_btn, field)
 	{
-		if (new_game_bt === undefined)
+		if (new_game_btn === undefined)
 		{
-			new_game_bt = false;
+			new_game_btn = false;
 		}
 
 		$('#msg_new_game').off('click');
 
 		var msg_box = $('#message_box');
-		var msg_div = $('<div id="message_text">' + msg + '</div>');
+		msg_box.hide();
+
+		var msg_div = $('<div>').attr('id', "message_text").html(msg);
 
 		msg_box.html(msg_div);
 
-		if (new_game_bt)
+		if (new_game_btn)
 		{
 			$('#message_text').append('<input type="button" id="msg_new_game" value="New Game">');
-			$('#msg_new_game').on('click', function() { mineblaster.field.initialize(mineblaster.field); });
+			$('#msg_new_game').on('click', function() { field.initialize(field); });
 		}
-
-		msg_box.css({visibility: 'hidden'});
 
 		this.center();
 
-		msg_box.hide();
-		msg_box.css({visibility: 'visible'});
 
-		if (mineblaster.settings.animations)
+		if (animations)
 		{
 			msg_box.fadeIn(timing);
 		}
@@ -43,10 +41,10 @@ class Message
 
 	// Hide message box
 	// ---------------------------------------------------------------------
-	hide()
+	hide(animations)
 	{
 		// Remove end message, if present
-		if (mineblaster.settings.animations)
+		if (animations)
 		{
 			$("#message_box").fadeOut();
 		}

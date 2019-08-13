@@ -7,9 +7,9 @@ class Field
 		this.settings = settings;
 		this.gui = gui;
 
-		this.rows_number;		// Field rows number
-		this.cols_number;		// Field columns number
-		this.mine_number;		// Field mines number
+		this.rows_number = 10;		// Field rows number
+		this.cols_number = 10;		// Field columns number
+		this.mine_number = 10;		// Field mines number
 		this.timeouts = [];		// Timeout container
 	}
 
@@ -18,6 +18,13 @@ class Field
 	// ---------------------------------------------------------------------
 	initialize(self)
 	{
+		// Parameters check
+		if (! self.check_parameters())
+		{
+			return false;
+		};
+
+
 		this.cells = [];	// Array containing mines and cells values
 		this.open_cells_number = 0;		// Open cells counter
 		this.marked_mines_number = 0;	// Mine-marked cells number
@@ -28,20 +35,13 @@ class Field
 			clearTimeout(self.timeouts[i]);
 		}
 
-		// Parameters check
-		if (! self.check_parameters())
-		{
-			return false;
-		};
-
-
-		self.gui.message.hide();
+		self.gui.message.hide(self.settings.animations);
 
 		// Change background color and then call field rebuilding
 		self.gui.change_background(function() { self.rebuild(self); });
 
 		// Close options, if open
-		self.gui.menu.close();
+		self.gui.menu.close(self.settings.animations);
 	}
 
 
@@ -55,37 +55,44 @@ class Field
 		var max_cols_number = $('#cols_number').attr("max");
 
 		// Get and check all field parameters
-		this.rows_number = parseInt($("#rows_number").val());
-		this.cols_number = parseInt($("#cols_number").val());
-		this.mine_number = parseInt($("#mine_number").val());
+		var rows_number = parseInt($("#rows_number").val());
+		var cols_number = parseInt($("#cols_number").val());
+		var mine_number = parseInt($("#mine_number").val());
 
 		// Parameters check
-		if (this.rows_number < 1 || this.rows_number > max_rows_number)
+		if (rows_number < 1 || rows_number > max_rows_number)
 		{
-			this.gui.message.show("Max rows number is " + max_rows_number + "!", 300);
+			this.gui.message.show("Max rows number is " + max_rows_number + "!", 300, this.settings.animations);
 			$('#rows_number').val(max_rows_number);
 			return false;
 		}
 
-		if (this.cols_number < 1 || this.cols_number > max_cols_number)
+		if (cols_number < 1 || cols_number > max_cols_number)
 		{
-			this.gui.message.show("Max columns number is " + max_cols_number + "!", 300);
+			this.gui.message.show("Max columns number is " + max_cols_number + "!", 300, this.settings.animations);
 			$('#cols_number').val(max_cols_number);
 			return false;
 		}
 
-		if (this.mine_number <= 0)
+		if (mine_number <= 0)
 		{
-			this.gui.message.show("Put at least one mine in the field!", 300);
+			this.gui.message.show("Put at least one mine in the field!", 300, this.settings.animations);
 			return false;
 		}
 
-		if (this.mine_number > (this.rows_number * this.cols_number) - 1)
+		if (mine_number > (rows_number * cols_number) - 1)
 		{
-			var max_mines = (this.rows_number * this.cols_number) - 1;
-			this.gui.message.show("Mines saturate field!<br />Please decrease number of mines to a maximum of " + max_mines, 300);
+			var max_mines = (rows_number * cols_number) - 1;
+			this.gui.message.show("Mines saturate field!<br />Please decrease number of mines to a maximum of " + max_mines, 300, this.settings.animations);
+			$("#mine_number").val(max_mines);
 			return false;
 		}
+
+
+		// Store data to local vars
+		this.rows_number = rows_number;
+		this.cols_number = cols_number;
+		this.mine_number = mine_number;
 
 		// Set cookies
 		this.settings.save_to_cookie('rows_number', this.rows_number);
@@ -267,6 +274,8 @@ class Field
 	// ---------------------------------------------------------------------
 	open_cell(row, column, stack_level)
 	{
+		var self = this;
+
 		// Cell HTML element
 		var cell = $("[data-row='" + row + "'][data-col='" + column + "']");
 
@@ -293,7 +302,7 @@ class Field
 		if (this.cells[row][column].mined == true)
 		{
 			cell.children(".back").addClass("mine");		// Apply mined CSS class
-			setTimeout("mineblaster.gui.message.show(\"You're dead :(\", 500, true)", 1000);		// Warn of death
+			setTimeout(function() { self.gui.message.show("You're dead :(", 500, self.settings.animations, true, self); }, 1000);		// Warn of death
 			this.mineblaster.game_over();			// Call end of game function
 
 			return;
@@ -302,7 +311,7 @@ class Field
 		// If remaining unopened cells number is 0, win
 		if (this.open_cells_number == (this.rows_number * this.cols_number) - this.mine_number)
 		{
-			setTimeout("mineblaster.gui.message.show(\"You win! :)\", 500, true)", 1000);		// Warn of victory
+			setTimeout(function() { self.gui.message.show("You win! :)", 500, self.settings.animations, true, self); }, 1000);		// Warn of victory
 			$('#remaining_cells, #remaining_mines').html('0');
 			this.mineblaster.game_over();			// Call end of game function
 			return;
@@ -358,7 +367,7 @@ class Field
 				var func = "$(\"[data-row='" + row + "'][data-col='" + column + "']\").addClass('open_cell');";
 
 				// If animations are enabled, queue them
-				if (options.animations)
+				if (this.settings.animations)
 				{
 					this.timeouts.push(setTimeout(func, 20 + delay));
 				}
@@ -484,7 +493,7 @@ class Field
 
 
 			// Vibrate on mobile devices
-			if (navigator.vibrate && options.vibration)
+			if (navigator.vibrate && self.settings.vibration)
 			{
 				navigator.vibrate(30);
 			}

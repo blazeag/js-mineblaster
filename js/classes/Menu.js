@@ -9,9 +9,9 @@ class Menu
 
 	// Open options menu
 	// --------------------------------------------------------
-	open()
+	open(animations)
 	{
-		if (options.animations)
+		if (animations)
 		{
 			$('#controls_box').animate({'top': '0px'});
 		}
@@ -26,12 +26,12 @@ class Menu
 
 	// Close options menu
 	// --------------------------------------------------------
-	close()
+	close(animations)
 	{
 		var controls_h = $('#controls_box').outerHeight();
 		var indicators_h = $('#indicators').outerHeight();
 
-		if (options.animations)
+		if (animations)
 		{
 			$('#controls_box').animate({'top': "-" + (controls_h - indicators_h) + 'px'});
 		}
@@ -47,8 +47,8 @@ class Menu
 
 	// Toggle options menu
 	// --------------------------------------------------------
-	toggle()
+	toggle(animations)
 	{
-		(this.opened) ? this.close() : this.open();
+		(this.opened) ? this.close(animations) : this.open(animations);
 	}
 }

@@ -29,11 +29,11 @@ class GUI
 		}
 
 		// Toggle options and set option button listener
-		$('#options').on('click', function() { self.menu.toggle() });
+		$('#settings').on('click', function() { self.menu.toggle(self.settings.animations); });
 		$('#controls_box, #message_box').on('click', function(event) {
 			event.stopPropagation();
 		});
-		$(document).on('click', function() { self.menu.close() });
+		$(document).on('click', function() { self.menu.close(self.settings.animations) });
 
 		$('#vibration').change(function (e)
 		{
