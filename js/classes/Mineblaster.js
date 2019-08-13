@@ -63,26 +63,24 @@ class Mineblaster
 	// ---------------------------------------------------------------------
 	game_over()
 	{
-		var i, j;
-
 		// Game over, remove all cells listeners
 		$(".cell").off();
 
 		// Show all mines position except the exploded one
-		for (i = 0; i < this.field.rows_number; i++)
+		for (var i = 0; i < this.field.rows_number; i++)
 		{
-			for (j = 0; j < this.field.cols_number; j++)
+			for (var j = 0; j < this.field.cols_number; j++)
 			{
 				// Show wrong marked mine
 				if (this.field.cells[i][j].marker == "M" && this.field.cells[i][j].mined == false)
 				{
-					$("#row" + i + "col" + j + " .front").html('').addClass("wrong_mine");
+					$("[data-row='" + i + "'][data-col='" + j + "'] .front").html('').addClass("wrong_mine");
 				}
 
 				// Show non-marked mines
 				if (this.field.cells[i][j].mined == true && this.field.cells[i][j].open == false)
 				{
-					$("#row" + i + "col" + j + " .front").html('').addClass("demined");
+					$("[data-row='" + i + "'][data-col='" + j + "'] .front").html('').addClass("demined");
 				}
 			}
 		}

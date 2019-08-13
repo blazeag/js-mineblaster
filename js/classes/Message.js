@@ -23,14 +23,13 @@ class Message
 		}
 
 		msg_box.css({visibility: 'hidden'});
-		msg_box.show();
 
 		this.center();
 
 		msg_box.hide();
 		msg_box.css({visibility: 'visible'});
 
-		if (options.animations)
+		if (mineblaster.settings.animations)
 		{
 			msg_box.fadeIn(timing);
 		}
@@ -47,7 +46,7 @@ class Message
 	hide()
 	{
 		// Remove end message, if present
-		if (options.animations)
+		if (mineblaster.settings.animations)
 		{
 			$("#message_box").fadeOut();
 		}

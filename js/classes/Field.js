@@ -69,14 +69,14 @@ class Field
 
 		if (this.cols_number < 1 || this.cols_number > max_cols_number)
 		{
-			this.message.show("Max columns number is " + max_cols_number + "!", 300);
+			this.gui.message.show("Max columns number is " + max_cols_number + "!", 300);
 			$('#cols_number').val(max_cols_number);
 			return false;
 		}
 
 		if (this.mine_number <= 0)
 		{
-			message("Put at least one mine in the field!", 300);
+			this.gui.message.show("Put at least one mine in the field!", 300);
 			return false;
 		}
 
