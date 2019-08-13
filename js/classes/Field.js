@@ -247,6 +247,7 @@ class Field
 
 		// Insert HTML field string into field HTML element
 		field_el.append(field_str);
+		field_el.css({'grid-template-columns': 'repeat(' + this.cols_number + ', 1fr)'});
 
 		// Resize field to fit window width/height
 		this.resize(this);
@@ -545,9 +546,6 @@ class Field
 		// when using decimal sizes
 		cell_w = Math.floor(cell_w);
 		cell_h = Math.floor(cell_h);
-
-		$("div.cell").width(cell_w);
-		$("div.cell").height(cell_h);
 
 		var field_w = (cell_w * this.cols_number);
 		var field_h = cell_h * this.rows_number;

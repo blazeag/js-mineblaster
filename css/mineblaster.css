@@ -1,42 +1,59 @@
+* {
+	box-sizing: border-box;
+}
+
+html {
+	width: 100%;
+	height: 100%;
+	font-size: 20pt;
+}
+
 body {
 	margin: 0;
 	padding: 0;
 	font-family: arial, helvetica, sans-serif;
-	background: #fff; /* Background initial color */
 	-webkit-user-select: none;
 	-moz-user-select: none;
+				console.log(i + '+' + j);
+
+	width: 100%;
+	height: 100%;
+}
+
+#mineblaster {
+	background-size: cover;
+	background-position: center;
+	width: 100%;
+	height: 100%;
 }
 
 #controls_box {
 	top: 0px;
-	background: #fff;
+	background: rgba(255,255,255,0.5);
 	z-index: 2000;
 	position: fixed;
 	width: 100%;
-	box-sizing: border-box;
 	text-align: center;
 }
 
 #controls {
 	padding: 10px;
 	padding-bottom: 0px;
-	background: rgba(0, 0, 0, 0.2);
+	background: rgba(0, 0, 0, 0.6);
 	color: rgba(255, 255, 255, 0.5);
 }
 
 #settings {
-	float: right;
+	position: absolute;
+	right: 15px;
+	bottom: 15px;
 	margin-right: 0px;
 	display: inline-block;
-	padding: 5px;
-	padding-top: 3px;
-	height: 17px;
-	width: 15px;
+	width: 2em;
+	height: 2em;
 	border-radius: 3px;
 	color: #000;
 	position: absolute;
-	bottom: 10px;
-	right: 5px;
 	background-color: rgba(255, 255, 255, 0.7);
 	background-image: url('../imgs/menu.svg');
 	background-position: center;
@@ -53,7 +70,7 @@ body {
 }
 
 #parameters {
-	border-bottom: 1px rgba(0, 0, 0, 0.2) solid;
+	border-bottom: 1px rgba(255, 255, 255, 0.2) solid;
 }
 
 #parameters .parameter {
@@ -61,9 +78,17 @@ body {
 	margin: 0px 5px;
 }
 
+#parameters .parameter label {
+	display: block;
+	margin-bottom: 0.1em;
+	font-size: 0.6em;
+	text-transform: uppercase;
+}
+
+
 #indicators {
-	padding-top: 10px;
-	padding-bottom: 10px;
+	padding-top: 20px;
+	padding-bottom: 20px;
 }
 
 #indicators span.indicator {
@@ -71,16 +96,17 @@ body {
 	padding: 5px 15px;
 	background: rgba(255, 255, 255, 0.6);
 	border-radius: 3px;
-	font-size: 10pt;
+	font-size: 1em;
 	color: #000;
 }
 
 input[type='number'] {
-	width: 40px;
+	width: 3em;
 	text-align: center;
-	padding: 5px;
+	padding: 0.2em;
 	border: none;
 	border-radius: 3px;
+	font-size: 1em;
 }
 
 input[type='button'] {
@@ -91,7 +117,7 @@ input[type='button'] {
 	border: 2px rgba(255, 255, 255, 0.9) solid;
 	border-radius: 3px;
 	font-weight: bold;
-	font-size: 8pt;
+	font-size: 1em;
 	text-transform: uppercase;
 }
 
@@ -103,6 +129,7 @@ input[type='button']:hover {
 div#field {
 	position: absolute;
 	z-index: 1000;
+	display: grid;
 }
 
 .cell {
@@ -110,7 +137,6 @@ div#field {
 	display: inline;
 	float: left;
 	cursor: default;
-	background: rgba(255, 255, 255, 0.5);
 	text-align: center;
 	font-weight: bold;
 	width: 100%;
@@ -119,10 +145,12 @@ div#field {
 	background-position: center;
 	background-repeat: no-repeat;
 	background-size: 40%;
+	border: 1px rgba(0,0,0,0) solid;
 }
 
 #field.animated .cell {
 	transition: 0.6s;
+
 }
 
 .cell.no_transition {
@@ -130,14 +158,15 @@ div#field {
 }
 
 .cell .front, .cell .back {
+	background: rgba(255, 255, 255, 0.8);
+	border: 1px rgba(0,0,0,0) solid;
+	border-radius: 3px;
 	backface-visibility: hidden;
 	position: absolute;
 	left: 0;
 	width: 100%;
 	height: 100%;
 	box-sizing: border-box;
-	border-left: 1px rgba(0, 0, 0, 0.1) solid;
-	border-top: 1px rgba(0, 0, 0, 0.1) solid;
 	padding-top: 2vmin;
 	font-size: 3vmin;
 	background-position: center;
@@ -150,9 +179,13 @@ div#field {
 }
 
 .open_cell {
-	background-color: #fff;
 	transform: rotateY(180deg);
 }
+
+.open_cell .back {
+	background-color: rgba(255,255,255,0.95);
+}
+
 
 .back {
 	transform: rotateY(180deg);
@@ -231,8 +264,6 @@ div#field {
 	width: 100%;
 }
 
-.short { display: none; }
-
 #msg_new_game {
 	display: block;
 	margin: auto;
@@ -246,15 +277,16 @@ div#field {
 
 @media screen and (max-width: 480px)
 {
-	.long { display: none; }
-	.short { display: inline; }
-
 	#controls {
 		margin-bottom: 0px;
+	}
+
+	#parameters .parameter {
+		display: block;
+		margin-bottom: 1em;
 	}
 
 	input[type="button"] {
 		margin-left: 0px;
 	}
-
 }

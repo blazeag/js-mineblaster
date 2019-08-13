@@ -12,8 +12,7 @@
 
 		<link type="text/css" rel="stylesheet" href="css/mineblaster.css" />
 
-		<script type="text/javascript" src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
-		<script type="text/javascript" src="https://code.jquery.com/color/jquery.color-2.1.2.min.js"></script>
+		<script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 
 		<script type="text/javascript" src="js/classes/Mineblaster.js"></script>
 		<script type="text/javascript" src="js/classes/Settings.js"></script>
@@ -43,14 +42,10 @@
 
 					<!-- Field parameters container -->
 					<div id="parameters">
-						<span class="parameter"><span class="short">R</span><span class="long">Rows</span> <input type="number" id="rows_number" value="10" min="1" max="30" /></span>
-						<span class="parameter"><span class="short">C</span><span class="long">Columns</span> <input type="number" id="cols_number" value="10" min="1" max="30" /></span>
-						<span class="parameter"><span class="short">M</span><span class="long">Mines</span> <input type="number" id="mine_number" value="10" min="1" /></span>
+						<span class="parameter"><label>Rows</label> <input type="number" id="rows_number" value="10" min="1" max="30" /></span>
+						<span class="parameter"><label>Columns</label> <input type="number" id="cols_number" value="10" min="1" max="30" /></span>
+						<span class="parameter"><label>Mines</label> <input type="number" id="mine_number" value="10" min="1" /></span>
 
-						<div class="option">
-							<input type="checkbox" id="vibration" checked="checked" /> Vibration
-							<input type="checkbox" id="animations" checked="checked" /> Animations
-							</div>
 						<div><input id="regenerate" type="button" value="New Game" /></div>
 					</div>
 

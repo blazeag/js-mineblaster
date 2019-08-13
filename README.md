@@ -18,4 +18,5 @@ A simple javascript / jQuery based Minesweeper clone. [Demo here](http://minebla
 * [x] Fullscreen when installed on dashboard
 * [x] Store settings into cookies
 * [x] Enable/Disable animations button
-* [ ] Auto-place menu on the shortest side
+* [x] Background images instead of colors
+* [ ] Better settings menu
