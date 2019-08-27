@@ -24,8 +24,6 @@ class Message
 			$('#msg_new_game').on('click', function() { field.initialize(field); });
 		}
 
-		this.center();
-
 
 		if (animations)
 		{
@@ -56,13 +54,4 @@ class Message
 		}
 	}
 
-
-
-	// Center message vertically
-	// ---------------------------------------------------------------------
-	center()
-	{
-		var msg_y = ($('#message_box').outerHeight() - $('#message_text').outerHeight()) / 2;
-		$('#message_text').css({top: msg_y + 'px'});
-	}
 }

@@ -280,6 +280,11 @@ class Field
 		// Cell HTML element
 		var cell = $("[data-row='" + row + "'][data-col='" + column + "']");
 
+		if (cell.length == 0)
+		{
+			return false;
+		}
+
 		// If cell doesn't contain a mine, and it is not an alreay opened cell, increase open cells counter
 		if (this.cells[row][column].mined == false && this.cells[row][column].open == false)
 		{
@@ -464,6 +469,7 @@ class Field
 		{
 			// Get pressed cell row and column number
 			var el = $(e.target).parent();
+			var el_front = el.find('.front');
 
 			var row = el.data("row");
 			var column = el.data("col");
@@ -478,18 +484,18 @@ class Field
 			if (self.cells[row][column].marker == "")
 			{
 				self.cells[row][column].marker = "M";
-				el.addClass('mined');
+				el_front.addClass('mined');
 			}
 			else if (self.cells[row][column].marker == "M")
 			{
 				self.cells[row][column].marker = "?";
-				el.removeClass('mined');
-				el.addClass('unknown');
+				el_front.removeClass('mined');
+				el_front.addClass('unknown');
 			}
 			else if (self.cells[row][column].marker == "?")
 			{
 				self.cells[row][column].marker = "";
-				el.removeClass('unknown');
+				el_front.removeClass('unknown');
 			}
 
 
@@ -570,8 +576,5 @@ class Field
 
 		// Re-enable transition effect for cells
 		$(".cell").removeClass("no_transition");
-
-		// Centers message, if open
-		self.gui.message.center();
 	}
 }
