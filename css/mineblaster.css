@@ -293,6 +293,13 @@ div#field {
 		margin-top: 5px;
 	}
 
+	#settings {
+		width: 40px;
+		height: 40px;
+		flex-shrink: 0;
+		flex-grow: 0;
+	}
+
 	#parameters .parameter {
 		display: block;
 		margin-bottom: 1em;
@@ -305,8 +312,6 @@ div#field {
 	#indicators span.indicator {
 		margin-top: 3px;
 		margin-bottom: 3px;
-		display: block;
-		width: 200px;
 		text-align: left;
 		font-size: 0.7em;
 	}
