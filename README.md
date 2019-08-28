@@ -17,6 +17,6 @@ A simple javascript / jQuery based Minesweeper clone. [Demo here](http://minebla
 * [x] Vibration feedback on mobile devices
 * [x] Fullscreen when installed on dashboard
 * [x] Store settings into cookies
-* [x] Enable/Disable animations button
+* [x] ~~Enable/Disable animations button~~
 * [x] Background images instead of colors
 * [ ] Better settings menu
