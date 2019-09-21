@@ -27,7 +27,7 @@ class Message
 
 		if (animations)
 		{
-			$('#mineblaster').css({filter: 'blur(5px)'});
+			$('#message_box').css({backdropFilter: 'blur(5px)'});
 			msg_box.fadeIn(timing);
 		}
 		else
