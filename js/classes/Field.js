@@ -122,7 +122,9 @@ class Field
 		// Associate new events to cells
 		$(".cell").on("click", function(e) { self.cell_click(e, self); });				// Cell opening listener
 		$(".cell").on("dblclick", function(e) { self.open_surrounding_cells(e, self) });		// Surrounding cells opening listener
+		$(".cell").on("doubletap", function(e) { self.open_surrounding_cells(e, self) });		// Surrounding cells opening listener
 		$(".cell").on("mousedown", function(e) { self.right_mouse_button(e, self); });			// Cell marking listener
+		$(".cell").on("press", function(e) { self.right_mouse_button(e, self); });			// Cell marking listener
 		$("#field").on("contextmenu", function (e) { e.preventDefault(); });	// Avoid cells contextual menu on right mouse button click
 
 	}
@@ -346,7 +348,6 @@ class Field
 		{
 			this.flip_open_cells();
 		}
-
 	}
 
 
@@ -360,9 +361,9 @@ class Field
 		// Flip all just opened cells in the same order they where opened
 		for (var i = 0; i < this.just_opened_cells.length; i++)
 		{
-			if (i == 0 && navigator.vibrate && this.settings.vibration)
+			if (i == 0 && window.navigator.vibrate && this.settings.vibration)
 			{
-				navigator.vibrate(30);
+				window.navigator.vibrate(100);
 			}
 
 			var row = this.just_opened_cells[i][0];
@@ -465,7 +466,7 @@ class Field
 	right_mouse_button(e, self)
 	{
 		// 3 is right mouse button value
-		if (e.which === 3)
+		if (e.which === 3 || e.type == 'press')
 		{
 			// Get pressed cell row and column number
 			var el = $(e.target).parent();
@@ -498,17 +499,13 @@ class Field
 				el_front.removeClass('unknown');
 			}
 
-
 			// Vibrate on mobile devices
-			if (navigator.vibrate && self.settings.vibration)
+			if (window.navigator.vibrate && self.settings.vibration)
 			{
-				navigator.vibrate(30);
+				window.navigator.vibrate(100);
 			}
 
-
-
-
-			// If cell assumes mied state, remove opening cell listener
+			// If cell assumes mined state, remove opening cell listener
 			if (self.cells[row][column].marker == "M")
 			{
 				el.off("click");

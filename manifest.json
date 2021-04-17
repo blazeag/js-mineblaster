@@ -1,0 +1,17 @@
+{
+    "short_name": "MineBlaster",
+    "name": "MineBlaster",
+    "start_url": ".",
+    "icons": [
+      {
+        "src": "/imgs/mineblaster_icon.png",
+        "sizes": "512x512",
+        "type": "image/png"
+      }
+    ],
+    "background_color": "#ffffff",
+    "theme_color": "#ed5924",
+    "display": "standalone",
+    "orientation": "any"
+  }
+  

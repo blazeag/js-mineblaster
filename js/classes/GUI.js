@@ -34,7 +34,7 @@ class GUI
 		});
 		$(document).on('click', function() { self.menu.close(self.settings.animations) });
 
-		$('#vibration').change(function (e)
+		$('#vibration').on('change', function (e)
 		{
 			if ($(e.target).is(':checked'))
 			{
@@ -50,7 +50,7 @@ class GUI
 
 		});
 
-		$('#animations').change(function (e) {
+		$('#animations').on('change', function (e) {
 
 			if ($(e.target).is(':checked'))
 			{
