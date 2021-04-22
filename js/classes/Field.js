@@ -363,7 +363,7 @@ class Field
 		{
 			if (i == 0 && window.navigator.vibrate && this.settings.vibration)
 			{
-				window.navigator.vibrate(100);
+				window.navigator.vibrate(30);
 			}
 
 			var row = this.just_opened_cells[i][0];
@@ -502,7 +502,7 @@ class Field
 			// Vibrate on mobile devices
 			if (window.navigator.vibrate && self.settings.vibration)
 			{
-				window.navigator.vibrate(100);
+				window.navigator.vibrate(30);
 			}
 
 			// If cell assumes mined state, remove opening cell listener
